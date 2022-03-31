@@ -10,6 +10,17 @@ from const import (
     # API Endpoints
     AUTH_RESOURCE,
     USER_RESOURCE,
+    REFRESH_TOKEN_RESOURCE,
+    SIGN_OUT_RESOURCE,
+    UPDATE_USER_RESOURCE,
+    RESET_PASSWORD_RESOURCE,
+    LIST_PROPERTIES_RESOURCE,
+    FETCH_NOTIFICATION_SETTINGS_RESOURCE,
+    FETCH_PROPERTY_SETTINGS_RESOURCE,
+    LIST_SIGNALS_RESOURCE,
+    LIST_SONICS_RESOURCE,
+    LIST_INCIDENTS_RESOURCE,
+    LIST_TELEMETRY_RESOURCE,
 )
 
 from test_credentials import (
@@ -19,6 +30,8 @@ from test_credentials import (
 
 AUTH_TOKEN = "testtoken"
 USER_ID = "123456789"
+PROPERTY_ID = ""
+SONIC_ID = ""
 
 async def sign_in():
         headers = {
@@ -48,14 +61,14 @@ async def sign_in():
 
    
         #This Api call returns an access token's owner details.
-        user_info_api = USER_RESOURCE+USER_ID
+        user_info_url = USER_RESOURCE+USER_ID
 
         headers2 = {
             'Content-Type': 'application/json',
             'Authorization': "Bearer "+AUTH_TOKEN
         }
         #requsting user info from api
-        user_info = requests.get(user_info_api, headers=headers2)
+        user_info = requests.get(user_info_url, headers=headers2)
 
         EMAIL = '{}'.format(user_info.json()['email'])
         print("Email: "+EMAIL)
