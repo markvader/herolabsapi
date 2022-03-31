@@ -1,0 +1,7 @@
+# Gitignore settings for Hero Labs API Python Library
+
+# Ignored files
+test_credentials.py
+
+# Ignored Folders
+__pycache__/
