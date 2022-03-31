@@ -11,7 +11,7 @@ Work In Progress -  Started 31st March 2022
 ## Endpoints
 
 |Method|Endpoint|Description|
-| --- | --- | --- |
+| :--- | :--- | :--- |
 |**Incidents**||
 |GET|/ape​/v1​/incidents|Get all accessible incidents|
 |GET|/ape​/v1​/incidents​/{id}|Get an incident|
