@@ -59,5 +59,11 @@ async def sign_in():
 
         EMAIL = '{}'.format(user_info.json()['email'])
         print("Email: "+EMAIL)
+        ROLES = '{}'.format(user_info.json()['roles'])
+        print("Roles: "+ROLES)
+        ACTIVEUSER = '{}'.format(user_info.json()['active'])
+        print("Active User?: "+ACTIVEUSER)
+        LANGUAGE = '{}'.format(user_info.json()['language'])
+        print("Language: "+LANGUAGE)
 
 asyncio.run(sign_in())
