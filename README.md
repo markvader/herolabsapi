@@ -55,6 +55,6 @@ Work In Progress -  Started 31st March 2022
 |PUT|​/ape​/v1​/sonics​/{sonic_id}​/valve|Open or close a sonic valve|
 |GET|/ape​/v1​/sonics_wifi|Get all accessible sonic wifis|
 |GET|/ape​/v1​/sonics_wifi​/{id}|Get a sonic wifi|
-|PATCH|/ape​/v1​/sonics_wifi​/{id}|Update a sonic|
-|PUT|/ape​/v1​/sonics_wifi​/{id}|Update a sonic|
+|PATCH|/ape​/v1​/sonics_wifi​/{id}|Update a sonic wifi|
+|PUT|/ape​/v1​/sonics_wifi​/{id}|Update a sonic wifi|
 |PUT|/ape​/v1​/sonics_wifi​/{sonic_id}​/valve|Open or close a sonic valve|
