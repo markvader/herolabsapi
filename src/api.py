@@ -1,10 +1,10 @@
-# Hero Labs API Python Library
+# Hero Labs API Python Library - api.py
 
-from typing import Any
-import asyncio
-from requests.auth import HTTPBasicAuth
-import requests
+import logging
 import json
+from requests import request, Session
+
+from sonic import Sonic
 
 from const import (
     # API Endpoints
@@ -23,60 +23,62 @@ from const import (
     LIST_TELEMETRY_RESOURCE,
 )
 
-from test_credentials import (
-    USERNAME,
-    PASSWORD,
-)
+_LOGGER = logging.getLogger(__name__)
 
-AUTH_TOKEN = "testtoken"
-USER_ID = "123456789"
-PROPERTY_ID = ""
-SONIC_ID = ""
+class Api:
 
-async def sign_in():
-        headers = {
-            'Content-Type': 'application/json'
-        }
-        data = {
-            # Initially I am pulling credentials from a seperate test_credential file
-            'email': USERNAME,
-            'password':  PASSWORD,
-        }
-        url = AUTH_RESOURCE
-        
         # Acquiring an access token is a one-step process.
-        # You just need to send an authorizing request with your credentials.
-        # All requests must be authenticated with an access token put in request 
-        # headers under Authorization key using the Bearer scheme.
-        # Your client may have up to 10 active tokens at a time.
-        result = requests.post(url, headers=headers, json=data)
+        # Send an authorizing request with your credentials (email & password).
+        # All other API endpoint requests must be authenticated with an access token 
+        # that is put in the authorization header using the Bearer scheme.
+        # A client may have up to 10 active tokens at a time.
 
-        #accessing authorisation token
-        AUTH_TOKEN = '{}'.format(result.json()['token_details'])
+    def __init__(self, timeout=10, command_timeout=60, http_session: Session = None):
+        self._timeout = timeout
+        self._command_timeout = command_timeout
+        self._http_session = http_session
+
+    def sign_in(self, email, password):
+        response = self._call_api(
+            "post", 
+            AUTH_RESOURCE,
+            params = None,
+            headers = {
+                'Content-Type': 'application/json'
+            },
+            json = { 
+                'email': email,
+                'password':  password
+            })
         
-        #accessing user id
-        USER_ID = '{}'.format(result.json()['user_details']['id'])
-        print("Token: "+AUTH_TOKEN)
-        print("User ID: "+USER_ID)
+        return response
 
-   
+    def _call_api(self, method, url, headers, params, **kwargs):
+        payload = kwargs.get("params") or kwargs.get("json")
+
+        if "timeout" not in kwargs:
+            kwargs["timeout"] = self._timeout
+        
+        _LOGGER.debug("Calling %s with payload=%s", url, payload)
+
+        response = self._http_session.request(method, url, headers = headers, params = params, **kwargs) if\
+            self._http_session is not None else\
+            request(method, url, headers = headers, params = params, **kwargs)
+
+        _LOGGER.debug("API Response received: %s - %s", response.status_code, response.content)
+
+        response.raise_for_status()
+
+        return response
+
+    def get_userDetails(self, token_details, userId):
         #This Api call returns an access token's owner details.
-        user_info_url = USER_RESOURCE+USER_ID
-
-        headers2 = {
+        headers = {
             'Content-Type': 'application/json',
-            'Authorization': "Bearer "+AUTH_TOKEN
+            'Authorization': "Bearer "+token_details
         }
-        #requsting user info from api
-        user_info = requests.get(user_info_url, headers=headers2)
-
-        EMAIL = '{}'.format(user_info.json()['email'])
-        print("Email: "+EMAIL)
-        ROLES = '{}'.format(user_info.json()['roles'])
-        print("Roles: "+ROLES)
-        ACTIVEUSER = '{}'.format(user_info.json()['active'])
-        print("Active User?: "+ACTIVEUSER)
-        LANGUAGE = '{}'.format(user_info.json()['language'])
-        print("Language: "+LANGUAGE)
-
-asyncio.run(sign_in())
+        params = None,
+        user_info_url = USER_RESOURCE+userId
+        userDetails = self._call_api("get", user_info_url, headers, params).json()
+        return userDetails
+          
