@@ -1,11 +1,9 @@
 # Hero Labs API Python Library - api.py
 
-import logging
+import requests
+from datetime import datetime
 import json
-from requests import request, Session
-
-from sonic import Sonic
-
+from typing import Optional
 from const import (
     # API Endpoints
     AUTH_RESOURCE,
@@ -23,7 +21,6 @@ from const import (
     LIST_TELEMETRY_RESOURCE,
 )
 
-_LOGGER = logging.getLogger(__name__)
 
 class Api:
 
@@ -32,53 +29,42 @@ class Api:
         # All other API endpoint requests must be authenticated with an access token 
         # that is put in the authorization header using the Bearer scheme.
         # A client may have up to 10 active tokens at a time.
-
-    def __init__(self, timeout=10, command_timeout=60, http_session: Session = None):
-        self._timeout = timeout
-        self._command_timeout = command_timeout
-        self._http_session = http_session
-
-    def sign_in(self, email, password):
-        response = self._call_api(
-            "post", 
-            AUTH_RESOURCE,
-            params = None,
-            headers = {
-                'Content-Type': 'application/json'
-            },
-            json = { 
-                'email': email,
-                'password':  password
-            })
         
-        return response
+    def __init__(self, herolabs_email: str, herolabs_password: str):
+        """
+        param (str) herolabs_email = the herolabs user email
+        param (str) herolabs_password = the herolabs user password
+        """
+        self._herolabs_email: str = herolabs_email
+        self._herolabs_password: str = herolabs_password
+        self._user_id: Optional[str] = None
+        self._auth_token: Optional[str] = None
+        self._auth_token_expiration: Optional[datetime] = None
 
-    def _call_api(self, method, url, headers, params, **kwargs):
-        payload = kwargs.get("params") or kwargs.get("json")
-
-        if "timeout" not in kwargs:
-            kwargs["timeout"] = self._timeout
-        
-        _LOGGER.debug("Calling %s with payload=%s", url, payload)
-
-        response = self._http_session.request(method, url, headers = headers, params = params, **kwargs) if\
-            self._http_session is not None else\
-            request(method, url, headers = headers, params = params, **kwargs)
-
-        _LOGGER.debug("API Response received: %s - %s", response.status_code, response.content)
-
-        response.raise_for_status()
-
-        return response
-
-    def get_userDetails(self, token_details, userId):
-        #This Api call returns an access token's owner details.
+    def _retrieve_token(self) -> None:
+        """this sends a request to get an auth token"""
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': "Bearer "+token_details
         }
-        params = None,
-        user_info_url = USER_RESOURCE+userId
-        userDetails = self._call_api("get", user_info_url, headers, params).json()
-        return userDetails
-          
+        json_data = {
+            'email': self._herolabs_email,
+            'password': self._herolabs_password,
+        }
+        response = requests.post(AUTH_RESOURCE, headers=headers, json=json_data)
+        response_data = response.json()
+        self._auth_token = response_data["token_details"]
+        self._user_id = response_data["user_details"]["id"]
+        
+        # print(response.text)
+
+    def _user_details(self) -> None:
+        user_details_url = USER_RESOURCE + self._user_id
+        response = requests.get(
+            user_details_url,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self._auth_token}"
+            }
+        )
+        data = response.json()
+        print("user_id json response: "+response.text)
