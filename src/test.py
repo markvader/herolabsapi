@@ -10,3 +10,5 @@ apiObj = Api(herolabs_email, herolabs_password)
 
 login = apiObj._retrieve_token()
 user_details = apiObj._user_details()
+sonics = apiObj._retrieve_sonics()
+signals = apiObj._retrieve_signals()
