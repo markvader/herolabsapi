@@ -13,6 +13,7 @@ LIST_SIGNALS_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/signals"
 LIST_SONICS_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/sonics"
 LIST_INCIDENTS_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/incidents"
 LIST_TELEMETRY_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/sonics/"  # +SONIC_ID+"/telemetry"
+SONIC_VALVE_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/sonics/"  # +SONIC_ID+"/valve"
 
 DEFAULT_TIMEOUT: int = 10
 DEFAULT_HEADER_CONTENT_TYPE: str = "application/json;charset=UTF-8"
