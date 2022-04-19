@@ -288,7 +288,7 @@ class Api:
         self._property_settings_webhook_url = response_data["webhook_url"]
         print("property_settings: " + response.text)
 
-    def _sonic_valve(self):
+    def _sonic_valve(self, valve_action: str):
         """A telemetry object contains the latest telemetry details from a Sonic
          such as pressure, temperature etc."""
         sonic_valve_url = SONIC_VALVE_RESOURCE + self._sonic_id + "/valve"
@@ -297,6 +297,10 @@ class Api:
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {self._auth_token}"
+            },
+            json={
+                "action": f"{valve_action}",  # options are open or close
             }
         )
-        print("sonic_telemetry: " + response.text)
+        print("sonic_valve: " + response.text)
+
