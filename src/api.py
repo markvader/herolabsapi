@@ -13,7 +13,7 @@ from const import (
     LIST_PROPERTIES_RESOURCE,
     FETCH_NOTIFICATION_SETTINGS_RESOURCE,
     FETCH_PROPERTY_SETTINGS_RESOURCE,
-
+    SONIC_VALVE_RESOURCE,
     AUTHENTICATED_HEADERS,
 
     #  unused at present
@@ -25,7 +25,7 @@ from const import (
 
 
 class Api:
-    
+
     def __init__(self, herolabs_email: str, herolabs_password: str):
         """
         param (str) herolabs_email = the herolabs user email
@@ -67,7 +67,7 @@ class Api:
         """this sends a request to get an auth token
         Acquiring an access token is a one-step process.
         Send an authorizing request with your credentials (email & password).
-        All other API endpoint requests must be authenticated with an access token 
+        All other API endpoint requests must be authenticated with an access token
         that is put in the authorization header using the Bearer scheme.
         A client may have up to 10 active tokens at a time.
         The default expiration duration should be two weeks (emails exchanged with hero labs developer)
@@ -287,3 +287,16 @@ class Api:
         self._property_settings_webhook_enabled = response_data["webhook_enabled"]
         self._property_settings_webhook_url = response_data["webhook_url"]
         print("property_settings: " + response.text)
+
+    def _sonic_valve(self):
+        """A telemetry object contains the latest telemetry details from a Sonic
+         such as pressure, temperature etc."""
+        sonic_valve_url = SONIC_VALVE_RESOURCE + self._sonic_id + "/valve"
+        response = requests.put(
+            sonic_valve_url,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self._auth_token}"
+            }
+        )
+        print("sonic_telemetry: " + response.text)
