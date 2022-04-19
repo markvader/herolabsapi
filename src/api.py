@@ -14,11 +14,10 @@ from const import (
     FETCH_NOTIFICATION_SETTINGS_RESOURCE,
     FETCH_PROPERTY_SETTINGS_RESOURCE,
     SONIC_VALVE_RESOURCE,
-    AUTHENTICATED_HEADERS,
-
-    #  unused at present
     REFRESH_TOKEN_RESOURCE,
     SIGN_OUT_RESOURCE,
+
+    #  unused at present
     UPDATE_USER_RESOURCE,
     RESET_PASSWORD_RESOURCE,
 )
@@ -95,10 +94,46 @@ class Api:
                 "Authorization": f"Bearer {self._auth_token}"
             }
         )
-        data = response.json()
-
         print("user_details: " + response.text)
-        return data
+
+    def _update_user_details(self, user_updates_payload) -> None:
+        """Updates an access token's owner details."""
+        update_user_details_url = UPDATE_USER_RESOURCE + self._user_id
+        # For multiple changes use comma separation dictionary {'last_name': 'testLastName', 'language': 'en'}
+        # These are passed as arguments in the function.
+        # The updatable options are "email", "first_name", "last_name", "phone" (e.g "+447712345678")
+        # & "language" (passed as a language value i.e "en", "pl")
+        response = requests.put(
+            update_user_details_url,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self._auth_token}"
+            },
+            data=json.dumps(user_updates_payload)
+        )
+        print("status_code: " + str(response.status_code) + " updated_user_details: " + response.text)
+
+    def _refresh_token(self):
+        """Refresh access token"""
+        response = requests.put(
+            REFRESH_TOKEN_RESOURCE,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self._auth_token}"
+            }
+        )
+        print("Refresh Token: " + response.text)
+
+    def _invalidate_token(self):
+        """Refresh access token"""
+        response = requests.delete(
+            SIGN_OUT_RESOURCE,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self._auth_token}"
+            }
+        )
+        print("Invalidate Token: " + response.text)
 
     def _retrieve_sonics(self) -> None:
         """this sends a request to get a list of sonic devices token"""
@@ -302,5 +337,4 @@ class Api:
                 "action": f"{valve_action}",  # options are open or close
             }
         )
-        print("sonic_valve: " + response.text)
-
+        print("sonic_valve status_code: " + str(response.status_code) + ", valve will now " + valve_action + response.text)
