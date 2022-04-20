@@ -16,8 +16,6 @@ from const import (
     SONIC_VALVE_RESOURCE,
     REFRESH_TOKEN_RESOURCE,
     SIGN_OUT_RESOURCE,
-
-    #  unused at present
     UPDATE_USER_RESOURCE,
     RESET_PASSWORD_RESOURCE,
 )
@@ -62,8 +60,6 @@ class Api:
         # self._signal_version: Optional[str] = None
         # self._signal_wifi_rssi: Optional[int] = None
 
-        # authenticated_header = {'Content-Type': 'application/json', 'Authorization': f"Bearer {self._auth_token}"}
-
     def _retrieve_token(self) -> None:
         """this sends a request to get an auth token
         Acquiring an access token is a one-step process.
@@ -73,29 +69,36 @@ class Api:
         A client may have up to 10 active tokens at a time.
         The default expiration duration should be two weeks (emails exchanged with hero labs developer)
         At my request they will add the token expiry time to the API response"""
-        headers = {
-            'Content-Type': 'application/json',
-        }
-        json_data = {
-            'email': self._herolabs_email,
-            'password': self._herolabs_password,
-        }
-        response = requests.post(AUTH_RESOURCE, headers=headers, json=json_data)
+        response = requests.post(
+            AUTH_RESOURCE,
+            headers={
+                'Content-Type': 'application/json',
+            },
+            json={
+                'email': self._herolabs_email,
+                'password': self._herolabs_password,
+            }
+        )
         response_data = response.json()
         self._auth_token = response_data["token_details"]
         self._user_id = response_data["user_details"]["id"]
         self._user_email = response_data["user_details"]["email"]
         print("retrieve token data: " + response.text)
 
+    def _authenticated_headers(self):
+        """Returns an access token's owner details."""
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self._auth_token}"
+        }
+        return headers
+
     def _user_details(self):
         """Returns an access token's owner details."""
         user_details_url = USER_RESOURCE + self._user_id
         response = requests.get(
             user_details_url,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._auth_token}"
-            }
+            headers=self._authenticated_headers(),
         )
         print("user_details: " + response.text)
 
@@ -108,10 +111,7 @@ class Api:
         # & "language" (passed as a language value i.e "en", "pl")
         response = requests.put(
             update_user_details_url,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._auth_token}"
-            },
+            headers=self._authenticated_headers(),
             data=json.dumps(user_updates_payload)
         )
         print("status_code: " + str(response.status_code) + " updated_user_details: " + response.text)
@@ -120,10 +120,7 @@ class Api:
         """Refresh access token"""
         response = requests.put(
             REFRESH_TOKEN_RESOURCE,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._auth_token}"
-            }
+            headers=self._authenticated_headers(),
         )
         print("Refresh Token: " + response.text)
 
@@ -131,21 +128,17 @@ class Api:
         """Refresh access token"""
         response = requests.delete(
             SIGN_OUT_RESOURCE,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._auth_token}"
-            }
+            headers=self._authenticated_headers(),
         )
         self._auth_token: Optional[str] = None
         print("invalidate_token status_code: " + str(response.status_code) + "Token Invalidated. " + response.text)
 
     def _retrieve_sonics(self) -> None:
         """this sends a request to get a list of sonic devices token"""
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self._auth_token}"
-        }
-        response = requests.get(LIST_SONICS_RESOURCE, headers=headers)
+        response = requests.get(
+            LIST_SONICS_RESOURCE,
+            headers=self._authenticated_headers()
+        )
         response_data = response.json()
         print("retrieve_sonics: " + response.text)
         self._sonic_total_sonics = response_data["total_entries"]
@@ -177,11 +170,10 @@ class Api:
     def _retrieve_signals(self) -> None:
         """A signal object is a representation of a Signal device (sometimes called hub)
          that communicates with Wi-Fi and Sonic (a valve installed on a pipe)."""
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self._auth_token}"
-        }
-        response = requests.get(LIST_SIGNALS_RESOURCE, headers=headers)
+        response = requests.get(
+            LIST_SIGNALS_RESOURCE,
+            headers=self._authenticated_headers()
+        )
         response_data = response.json()
         print("retrieve_signals: " + response.text)
         self._signal_total_signals = response_data["total_entries"]
@@ -209,11 +201,10 @@ class Api:
     def _retrieve_incidents(self) -> None:
         """An incident is created whenever the hero labs platform
          detects leakage, disconnection, low battery etc."""
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self._auth_token}"
-        }
-        response = requests.get(LIST_INCIDENTS_RESOURCE, headers=headers)
+        response = requests.get(
+            LIST_INCIDENTS_RESOURCE,
+            headers=self._authenticated_headers()
+        )
         response_data = response.json()
         print("retrieve_incidents: " + response.text)
         self._incidents_total_incidents = response_data["total_entries"]
@@ -243,10 +234,7 @@ class Api:
         sonic_telemetry_url = LIST_TELEMETRY_RESOURCE + self._sonic_id + "/telemetry"
         response = requests.get(
             sonic_telemetry_url,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._auth_token}"
-            }
+            headers=self._authenticated_headers(),
         )
         response_data = response.json()
         self._telemetry_probe_time = response_data["probed_at"]
@@ -263,11 +251,10 @@ class Api:
         """Property is the main object, and it may represent a single flat, house, apartment etc.
         It has an owner and all other objects like a sonic, signal, incidents and others
         are either directly or indirectly linked to a property."""
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self._auth_token}"
-        }
-        response = requests.get(LIST_PROPERTIES_RESOURCE, headers=headers)
+        response = requests.get(
+            LIST_PROPERTIES_RESOURCE,
+            headers=self._authenticated_headers(),
+        )
         response_data = response.json()
         print("retrieve_properties: " + response.text)
         self._properties_total_properties = response_data["total_entries"]
@@ -291,10 +278,7 @@ class Api:
         property_notification_settings_url = FETCH_NOTIFICATION_SETTINGS_RESOURCE + self._property_id + "/notifications"
         response = requests.get(
             property_notification_settings_url,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._auth_token}"
-            }
+            headers=self._authenticated_headers(),
         )
         response_data = response.json()
         self._property_notifications_cloud_disconnection = response_data["cloud_disconnection"]
@@ -313,10 +297,7 @@ class Api:
         property_settings_url = FETCH_PROPERTY_SETTINGS_RESOURCE + self._property_id + "/settings"
         response = requests.get(
             property_settings_url,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._auth_token}"
-            }
+            headers=self._authenticated_headers()
         )
         response_data = response.json()
         self._property_settings_auto_shut_off = response_data["auto_shut_off"]
@@ -333,10 +314,7 @@ class Api:
         sonic_valve_url = SONIC_VALVE_RESOURCE + self._sonic_id + "/valve"
         response = requests.put(
             sonic_valve_url,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._auth_token}"
-            },
+            headers=self._authenticated_headers(),
             json={
                 "action": f"{valve_action}",  # options are open or close
             }
@@ -349,10 +327,7 @@ class Api:
         http status 204 regardless of email existence."""
         response = requests.post(
             RESET_PASSWORD_RESOURCE,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self._auth_token}"
-            },
+            headers=self._authenticated_headers(),
             json={
                 "email": f"{user_email}",  # options are open or close
             }
