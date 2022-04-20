@@ -62,6 +62,8 @@ class Api:
         # self._signal_version: Optional[str] = None
         # self._signal_wifi_rssi: Optional[int] = None
 
+        # authenticated_header = {'Content-Type': 'application/json', 'Authorization': f"Bearer {self._auth_token}"}
+
     def _retrieve_token(self) -> None:
         """this sends a request to get an auth token
         Acquiring an access token is a one-step process.
@@ -82,6 +84,7 @@ class Api:
         response_data = response.json()
         self._auth_token = response_data["token_details"]
         self._user_id = response_data["user_details"]["id"]
+        self._user_email = response_data["user_details"]["email"]
         print("retrieve token data: " + response.text)
 
     def _user_details(self):
@@ -173,7 +176,7 @@ class Api:
 
     def _retrieve_signals(self) -> None:
         """A signal object is a representation of a Signal device (sometimes called hub)
-         that communicates with WiFi and Sonic (a valve installed on a pipe)."""
+         that communicates with Wi-Fi and Sonic (a valve installed on a pipe)."""
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self._auth_token}"
@@ -257,7 +260,7 @@ class Api:
         # print(self._telemetry_water_flow)
 
     def _retrieve_properties(self) -> None:
-        """Property is the main object and it may represent a single flat, house, apartment etc.
+        """Property is the main object, and it may represent a single flat, house, apartment etc.
         It has an owner and all other objects like a sonic, signal, incidents and others
         are either directly or indirectly linked to a property."""
         headers = {
@@ -338,4 +341,20 @@ class Api:
                 "action": f"{valve_action}",  # options are open or close
             }
         )
-        print("sonic_valve status_code: " + str(response.status_code) + ", valve will now " + valve_action + response.text)
+        print("sonic_valve status_code: " + str(response.status_code) + ", valve will now " + valve_action
+              + response.text)
+
+    def _reset_password_request(self, user_email: str):
+        """Requests reset password email with further instructions. The endpoint returns always
+        http status 204 regardless of email existence."""
+        response = requests.post(
+            RESET_PASSWORD_RESOURCE,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self._auth_token}"
+            },
+            json={
+                "email": f"{user_email}",  # options are open or close
+            }
+        )
+        print("reset_password_request status_code: " + str(response.status_code) + response.text)
