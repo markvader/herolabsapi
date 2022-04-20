@@ -133,7 +133,8 @@ class Api:
                 "Authorization": f"Bearer {self._auth_token}"
             }
         )
-        print("Invalidate Token: " + response.text)
+        self._auth_token: Optional[str] = None
+        print("invalidate_token status_code: " + str(response.status_code) + "Token Invalidated. " + response.text)
 
     def _retrieve_sonics(self) -> None:
         """this sends a request to get a list of sonic devices token"""
