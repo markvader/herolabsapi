@@ -232,7 +232,9 @@ class Api:
             headers=self._authenticated_headers(),
         )
         response_data = response.json()
-        self._telemetry_probe_time = response_data["probed_at"]
+        self._telemetry_probe_time_timestamp = response_data["probed_at"]
+        self._telemetry_probe_time_datetime = datetime.fromtimestamp(self._telemetry_probe_time_timestamp)
+        print("Telemetry probed at =", self._telemetry_probe_time_datetime)
         self._telemetry_pressure = response_data["pressure"]  # pressure is reported as millibar e.g 4914 = 4.914 bar
         self._telemetry_water_flow = response_data["water_flow"]
         self._telemetry_water_temp = response_data["water_temp"]

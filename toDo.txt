@@ -2,7 +2,7 @@ TO DO
 initiate session properly
 async
 functions - appropriate returns
-functions - deal with time for time code responses
+functions - deal with time for time code responses (done with telemetry timestamp returned)
 
 start:
 home assistant integration
