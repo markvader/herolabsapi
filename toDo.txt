@@ -1,0 +1,23 @@
+TO DO
+initiate session properly
+async
+functions - appropriate returns
+functions - deal with time for time code responses
+
+start:
+home assistant integration
+
+later:
+Refactor
+Seperate to different files if appropriate
+
+DONE
+create and use function for common headers
+set token expiry
+initiate checks for token being present, check if token valid, if not request one, if expiring soon, renew it.
+
+
+
+
+example format for datetime
+self._auth_token_expiration: Optional[datetime] = datetime(2022, 4, 21, 1, 30, 29, 469926)
