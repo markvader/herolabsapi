@@ -1,20 +1,23 @@
 TO DO
-initiate session properly
-async
-functions - appropriate returns
-functions - deal with time for time code responses (done with telemetry timestamp returned)
+- initiate session properly
+- async
+- functions - appropriate returns
+- appropriate handling for users with multiple sonics, signals or properties, at the minute i only utilise first devices returned
+- hide print statements
+- add logging
 
 start:
-home assistant integration
+- home assistant integration
 
 later:
-Refactor
-Seperate to different files if appropriate
+- Refactor
+- Separate functions to different files if appropriate, login & user functions, device interactions (sonics & signals), incidents
 
 DONE
-create and use function for common headers
-set token expiry
-initiate checks for token being present, check if token valid, if not request one, if expiring soon, renew it.
+- create and use function for common headers
+- set token expiry
+- initiate checks for token being present, check if token valid, if not request one, if expiring soon, renew it.
+- functions - timestamps returned in telemetry and signals json response, converted to date time
 
 
 

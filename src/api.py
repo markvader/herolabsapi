@@ -192,9 +192,13 @@ class Api:
         self._signal_total_signals = response_data["total_entries"]
         # For now, I am only storing the first signal device
         self._signal_id = response_data["data"][0]["id"]
-        self._signal_boot_time = response_data["data"][0]["boot_time"]
+        self._signal_boot_time_timestamp = response_data["data"][0]["boot_time"]
+        self._signal_boot_time_datetime = datetime.fromtimestamp(self._signal_boot_time_timestamp)
+        print("Signal Boot Time: ", self._signal_boot_time_datetime, self._signal_boot_time_timestamp)
         self._signal_cloud_connection = response_data["data"][0]["cloud_connection"]
-        self._signal_modem_boot_time = response_data["data"][0]["modem_boot_time"]
+        self._signal_modem_boot_time_timestamp = response_data["data"][0]["modem_boot_time"]
+        self._signal_modem_boot_time_datetime = datetime.fromtimestamp(self._signal_modem_boot_time_timestamp)
+        # _signal_modem_boot_time_timestamp returns 0 value
         self._signal_modem_version = response_data["data"][0]["modem_version"]
         self._signal_name = response_data["data"][0]["name"]
         self._signal_serial_no = response_data["data"][0]["serial_no"]
