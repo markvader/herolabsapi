@@ -74,7 +74,7 @@ class Api:
         self._user_email = response_data["user_details"]["email"]
         self._auth_token_expiration = datetime.now() + timedelta(days=10)  # I am expiring the token after 10 days
         self._token_renewal_time = self._auth_token_expiration - timedelta(days=2)  # token refreshes after 8 days
-        print("retrieve token data: ", response.text)
+        # print("retrieve token data: ", response.text)
 
     def _check_token(self):
         """Check token expiry time."""
@@ -194,11 +194,10 @@ class Api:
         self._signal_id = response_data["data"][0]["id"]
         self._signal_boot_time_timestamp = response_data["data"][0]["boot_time"]
         self._signal_boot_time_datetime = datetime.fromtimestamp(self._signal_boot_time_timestamp)
-        print("Signal Boot Time: ", self._signal_boot_time_datetime, self._signal_boot_time_timestamp)
         self._signal_cloud_connection = response_data["data"][0]["cloud_connection"]
-        self._signal_modem_boot_time_timestamp = response_data["data"][0]["modem_boot_time"]
-        self._signal_modem_boot_time_datetime = datetime.fromtimestamp(self._signal_modem_boot_time_timestamp)
-        # _signal_modem_boot_time_timestamp returns 0 value
+        # self._signal_modem_boot_time_timestamp = response_data["data"][0]["modem_boot_time"]
+        # # _signal_modem_boot_time_timestamp returns 0 value
+        # self._signal_modem_boot_time_datetime = datetime.fromtimestamp(self._signal_modem_boot_time_timestamp)
         self._signal_modem_version = response_data["data"][0]["modem_version"]
         self._signal_name = response_data["data"][0]["name"]
         self._signal_serial_no = response_data["data"][0]["serial_no"]
@@ -238,7 +237,6 @@ class Api:
         response_data = response.json()
         self._telemetry_probe_time_timestamp = response_data["probed_at"]
         self._telemetry_probe_time_datetime = datetime.fromtimestamp(self._telemetry_probe_time_timestamp)
-        print("Telemetry probed at =", self._telemetry_probe_time_datetime)
         self._telemetry_pressure = response_data["pressure"]  # pressure is reported as millibar e.g 4914 = 4.914 bar
         self._telemetry_water_flow = response_data["water_flow"]
         self._telemetry_water_temp = response_data["water_temp"]
