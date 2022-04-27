@@ -5,7 +5,7 @@ TO DO
 - appropriate handling for users with multiple sonics, signals or properties, at the minute i only utilise first devices returned
 - hide print statements
 - capturing full log of incidents, displaying all/open/last etc
-- add logging
+- add logging to all
 
 start:
 - home assistant integration
