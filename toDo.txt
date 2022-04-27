@@ -1,9 +1,10 @@
 TO DO
 - initiate session properly
-- async
+- rewrite for asynchronous code (will need to use aiohttp rather than requests)
 - functions - appropriate returns
 - appropriate handling for users with multiple sonics, signals or properties, at the minute i only utilise first devices returned
 - hide print statements
+- capturing full log of incidents, displaying all/open/last etc
 - add logging
 
 start:
@@ -17,7 +18,7 @@ DONE
 - create and use function for common headers
 - set token expiry
 - initiate checks for token being present, check if token valid, if not request one, if expiring soon, renew it.
-- functions - timestamps returned in telemetry and signals json response, converted to date time
+- functions - timestamps returned in telemetry and signals json response, converted to datetime
 
 
 
