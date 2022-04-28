@@ -49,6 +49,8 @@ class Api:
         # self._sonic_status: Optional[str] = None
         # self._sonic_valve_state: Optional[str] = None
 
+#        self.session = requests.Session()
+
     def _retrieve_token(self) -> None:
         """this sends a request to get an auth token
         Acquiring an access token is a one-step process.
@@ -58,6 +60,7 @@ class Api:
         A client may have up to 10 active tokens at a time.
         The default expiration duration should be two weeks (emails exchanged with hero labs developer)
         At my request they will add the token expiry time to the API response"""
+#        response = self._session.requests.post(
         response = requests.post(
             AUTH_RESOURCE,
             headers={
@@ -73,28 +76,30 @@ class Api:
         self._user_id = response_data["user_details"]["id"]
         self._user_email = response_data["user_details"]["email"]
         self._auth_token_expiration = datetime.now() + timedelta(days=10)  # I am expiring the token after 10 days
-        self._token_renewal_time = self._auth_token_expiration - timedelta(days=2)  # token refreshes after 8 days
+        self._token_renewal_time = self._auth_token_expiration - timedelta(days=3)  # token refreshes after 7 days
         # print("retrieve token data: ", response.text)
 
     def _check_token(self):
         """Check token expiry time."""
         # if no token exists, get one
         if self._auth_token is None:
+            # No token, so getting one
             # print("no token, - acquiring now")
             self._retrieve_token()
             # print("token acquired, new expiry time: ", self._auth_token_expiration)
             return
         if datetime.now() < self._token_renewal_time:
-            # print("token date valid")
-            # print(self._auth_token_expiration)
+            # if token less than 7 days old, it is still valid so pass check
             return
         if self._token_renewal_time <= datetime.now() < self._auth_token_expiration:
+            # token more than 7 days old but expiring soon, so requesting updated token
             # print("token expiring soon, requesting updated token")
             self._refresh_token()
             # print("new token expiry time: ", self._auth_token_expiration)
             return
         else:
-            # print("no valid or in-date token")
+            # Token expired, so getting one
+            # print("Token expired, getting a new one now")
             self._retrieve_token()
             # print("token acquired")
             # print("new token expiry time: ", self._auth_token_expiration)
@@ -110,6 +115,7 @@ class Api:
 
     def _refresh_token(self):
         """Refresh access token"""
+#        response = self._session.requests.put(
         response = requests.put(
             REFRESH_TOKEN_RESOURCE,
             headers=self._authenticated_headers(),
@@ -117,11 +123,12 @@ class Api:
         response_data = response.json()
         self._auth_token = response_data["token_details"]
         self._auth_token_expiration = datetime.now() + timedelta(days=10)  # I am expiring the token after 10 days
-        self._token_renewal_time = self._auth_token_expiration - timedelta(days=2)  # token refreshes after 8 days
+        self._token_renewal_time = self._auth_token_expiration - timedelta(days=3)  # token refreshes after 7 days
         print("Refresh Token: ", response.text)
 
     def _invalidate_token(self):
         """Refresh access token"""
+#        response = self._session.requests.delete(
         response = requests.delete(
             SIGN_OUT_RESOURCE,
             headers=self._authenticated_headers(),
