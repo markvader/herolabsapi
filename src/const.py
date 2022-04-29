@@ -11,6 +11,7 @@ FETCH_NOTIFICATION_SETTINGS_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/properties/
 FETCH_PROPERTY_SETTINGS_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/properties/"  # +PROPERTY_ID+"/settings"
 LIST_SIGNALS_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/signals"
 LIST_SONICS_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/sonics"
+LIST_SONICS_WIFI_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/sonics_wifi"
 LIST_INCIDENTS_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/incidents"
 LIST_TELEMETRY_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/sonics/"  # +SONIC_ID+"/telemetry"
 SONIC_VALVE_RESOURCE: str = f"{BASE_RESOURCE}/ape/v1/sonics/"  # +SONIC_ID+"/valve"

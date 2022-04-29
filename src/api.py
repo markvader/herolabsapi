@@ -7,6 +7,7 @@ from const import (
     AUTH_RESOURCE,
     USER_RESOURCE,
     LIST_SONICS_RESOURCE,
+    LIST_SONICS_WIFI_RESOURCE,
     LIST_SIGNALS_RESOURCE,
     LIST_INCIDENTS_RESOURCE,
     LIST_TELEMETRY_RESOURCE,
@@ -186,6 +187,26 @@ class Api:
         self._sonic_status = response_data["data"][0]["status"]
         self._sonic_valve_state = response_data["data"][0]["valve_state"]
 
+    def _retrieve_sonics_wifi(self, property_id) -> None:
+        self._check_token()
+        """this sends a request to get a list of sonic wifi"""
+        sonic_wifi_url = FETCH_NOTIFICATION_SETTINGS_RESOURCE + property_id + "/sonics_wifi"
+        response = requests.get(
+            sonic_wifi_url,
+            headers=self._authenticated_headers()
+        )
+        print("retrieve sonics wifi: ", response.text)
+
+    def _retrieve_sonic_by_id(self, sonic_id) -> None:
+        """this sends a request to get the details of a specified sonic device"""
+        self._check_token()
+        sonic_id_url = LIST_SONICS_RESOURCE + "/" + sonic_id
+        response = requests.get(
+            sonic_id_url,
+            headers=self._authenticated_headers()
+        )
+        print("retrieve sonic data by id: ", response.text)
+
     def _retrieve_signals(self) -> None:
         self._check_token()
         """A signal object is a representation of a Signal device (sometimes called hub)
@@ -211,10 +232,20 @@ class Api:
         self._signal_version = response_data["data"][0]["version"]
         self._signal_wifi_rssi = response_data["data"][0]["wifi_rssi"]
 
-    def _retrieve_incidents(self) -> None:
+    def _retrieve_signal_by_id(self, signal_id) -> None:
+        """this sends a request to get the details of a specified signal device"""
         self._check_token()
+        signal_id_url = LIST_SIGNALS_RESOURCE + "/" + signal_id
+        response = requests.get(
+            signal_id_url,
+            headers=self._authenticated_headers()
+        )
+        print("retrieve signal data by id: ", response.text)
+
+    def _retrieve_incidents(self) -> None:
         """An incident is created whenever the hero labs platform
          detects leakage, disconnection, low battery etc."""
+        self._check_token()
         response = requests.get(
             LIST_INCIDENTS_RESOURCE,
             headers=self._authenticated_headers()
@@ -231,6 +262,17 @@ class Api:
         self._incidents_severity = response_data["data"][0]["severity"]
         self._incidents_state = response_data["data"][0]["state"]
         self._incidents_type = response_data["data"][0]["type"]
+
+    def _retrieve_incident_by_id(self, incident_id) -> None:
+        """this sends a request to get the details of a specified incident
+        (leakage detection, disconnection, low battery etc.)"""
+        self._check_token()
+        incident_id_url = LIST_INCIDENTS_RESOURCE + "/" + incident_id
+        response = requests.get(
+            incident_id_url,
+            headers=self._authenticated_headers()
+        )
+        print("retrieve incident by id: ", response.text)
 
     def _sonic_telemetry(self):
         self._retrieve_sonics()
@@ -273,6 +315,16 @@ class Api:
         self._property_postcode = response_data["data"][0]["postcode"]
         self._property_uprn = response_data["data"][0]["uprn"]
 
+    def _retrieve_property_by_id(self, property_id) -> None:
+        """this sends a request to get the details of a specified property"""
+        self._check_token()
+        property_id_url = LIST_PROPERTIES_RESOURCE + "/" + property_id
+        response = requests.get(
+            property_id_url,
+            headers=self._authenticated_headers()
+        )
+        print("retrieve property by id: ", response.text)
+
     def _property_notification_settings(self) -> None:
         self._retrieve_properties()
         """Part of the property object is notification settings where a user can configure
@@ -294,6 +346,16 @@ class Api:
         self._property_notifications_radio_disconnection = response_data["radio_disconnection"]
         print("property_notifications: ", response.text)
 
+    def _property_notification_settings_by_property_id(self, property_id) -> None:
+        """this sends a request to get the notification settings of a specified property"""
+        self._check_token()
+        property_notification_settings_url = FETCH_NOTIFICATION_SETTINGS_RESOURCE + property_id + "/notifications"
+        response = requests.get(
+            property_notification_settings_url,
+            headers=self._authenticated_headers(),
+        )
+        print("property notification settings by specified property id: ", response.text)
+
     def _property_settings(self) -> None:
         self._retrieve_properties()
         """Part of the property object is settings where a user can configure timezone, webhook etc."""
@@ -310,6 +372,46 @@ class Api:
         self._property_settings_webhook_enabled = response_data["webhook_enabled"]
         self._property_settings_webhook_url = response_data["webhook_url"]
         print("property_settings: ", response.text)
+
+    def _property_settings_by_property_id(self, property_id) -> None:
+        """this sends a request to get the settings of a specified property"""
+        self._check_token()
+        property_settings_url = FETCH_PROPERTY_SETTINGS_RESOURCE + property_id + "/settings"
+        response = requests.get(
+            property_settings_url,
+            headers=self._authenticated_headers(),
+        )
+        print("property settings by specified property id: ", response.text)
+
+    def _signals_by_property_id(self, property_id) -> None:
+        """this sends a request to get the signals of a specified property"""
+        self._check_token()
+        property_signals_url = FETCH_PROPERTY_SETTINGS_RESOURCE + property_id + "/signals"
+        response = requests.get(
+            property_signals_url,
+            headers=self._authenticated_headers(),
+        )
+        print("signals by specified property id: ", response.text)
+
+    def _sonics_by_signal_id(self, signal_id) -> None:
+        """this sends a request to get the signals of a specified property"""
+        self._check_token()
+        sonics_signals_url = LIST_SIGNALS_RESOURCE + "/" + signal_id + "/sonics"
+        response = requests.get(
+            sonics_signals_url,
+            headers=self._authenticated_headers(),
+        )
+        print("sonics by specified signal id: ", response.text)
+
+    def _incidents_by_property_id(self, property_id) -> None:
+        """this sends a request to get the incidents of a specified property"""
+        self._check_token()
+        property_incidents_url = FETCH_PROPERTY_SETTINGS_RESOURCE + property_id + "/incidents"
+        response = requests.get(
+            property_incidents_url,
+            headers=self._authenticated_headers(),
+        )
+        print("Incidents by specified property id: ", response.text)
 
     def _sonic_valve(self, valve_action: str):
         self._retrieve_sonics()
@@ -338,3 +440,16 @@ class Api:
             }
         )
         print("reset_password_request status_code: ", str(response.status_code), response.text)
+
+    def _action_incident(self, incident_id, incident_action: str) -> None:
+        """Transitioning an incident to a different state"""
+        self._check_token()
+        incident_id_url = LIST_INCIDENTS_RESOURCE + "/" + incident_id + "/action"
+        response = requests.put(
+            incident_id_url,
+            headers=self._authenticated_headers(),
+            json={
+                "action": f"{incident_action}",  # options are "dismiss" or "reopen"
+            }
+        )
+        print("Incident " + incident_action + " completed: " + response.text)
