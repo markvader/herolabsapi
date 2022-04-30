@@ -58,3 +58,8 @@ apiObj = Api(herolabs_email, herolabs_password)
 # Incident Actions
 # dismiss_incident_by_id = apiObj._action_incident(demo_incident_id, "dismiss")
 # reopen_incident_by_id = apiObj._action_incident(demo_incident_id, "reopen")
+
+# update_property_by_id = apiObj._update_property(demo_property_id, json = {'city': "NewDemoCityNameValue",
+#                                                                           'name': "NewDemoPropertyNameValue"})
+# update_signal_by_id = apiObj._update_signal(demo_signal_id, "NewSignalName")
+# update_sonic_by_id = apiObj._update_sonic(demo_sonic_id, "NewSonicName")

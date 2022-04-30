@@ -149,7 +149,7 @@ class Api:
         )
         print("user_details: ", str(response.text))
 
-    def _update_user_details(self, user_updates_payload) -> None:
+    def _update_user_details(self, user_updates_payload: str) -> None:
         """Updates an access token's owner details."""
         self._check_token()
         update_user_details_url = UPDATE_USER_RESOURCE + self._user_id
@@ -187,7 +187,7 @@ class Api:
         self._sonic_status = response_data["data"][0]["status"]
         self._sonic_valve_state = response_data["data"][0]["valve_state"]
 
-    def _retrieve_sonics_wifi(self, property_id) -> None:
+    def _retrieve_sonics_wifi(self, property_id: str) -> None:
         self._check_token()
         """this sends a request to get a list of sonic wifi"""
         sonic_wifi_url = FETCH_NOTIFICATION_SETTINGS_RESOURCE + property_id + "/sonics_wifi"
@@ -197,7 +197,7 @@ class Api:
         )
         print("retrieve sonics wifi: ", response.text)
 
-    def _retrieve_sonic_by_id(self, sonic_id) -> None:
+    def _retrieve_sonic_by_id(self, sonic_id: str) -> None:
         """this sends a request to get the details of a specified sonic device"""
         self._check_token()
         sonic_id_url = LIST_SONICS_RESOURCE + "/" + sonic_id
@@ -232,7 +232,7 @@ class Api:
         self._signal_version = response_data["data"][0]["version"]
         self._signal_wifi_rssi = response_data["data"][0]["wifi_rssi"]
 
-    def _retrieve_signal_by_id(self, signal_id) -> None:
+    def _retrieve_signal_by_id(self, signal_id: str) -> None:
         """this sends a request to get the details of a specified signal device"""
         self._check_token()
         signal_id_url = LIST_SIGNALS_RESOURCE + "/" + signal_id
@@ -263,7 +263,7 @@ class Api:
         self._incidents_state = response_data["data"][0]["state"]
         self._incidents_type = response_data["data"][0]["type"]
 
-    def _retrieve_incident_by_id(self, incident_id) -> None:
+    def _retrieve_incident_by_id(self, incident_id: str) -> None:
         """this sends a request to get the details of a specified incident
         (leakage detection, disconnection, low battery etc.)"""
         self._check_token()
@@ -315,7 +315,7 @@ class Api:
         self._property_postcode = response_data["data"][0]["postcode"]
         self._property_uprn = response_data["data"][0]["uprn"]
 
-    def _retrieve_property_by_id(self, property_id) -> None:
+    def _retrieve_property_by_id(self, property_id: str) -> None:
         """this sends a request to get the details of a specified property"""
         self._check_token()
         property_id_url = LIST_PROPERTIES_RESOURCE + "/" + property_id
@@ -346,7 +346,7 @@ class Api:
         self._property_notifications_radio_disconnection = response_data["radio_disconnection"]
         print("property_notifications: ", response.text)
 
-    def _property_notification_settings_by_property_id(self, property_id) -> None:
+    def _property_notification_settings_by_property_id(self, property_id: str) -> None:
         """this sends a request to get the notification settings of a specified property"""
         self._check_token()
         property_notification_settings_url = FETCH_NOTIFICATION_SETTINGS_RESOURCE + property_id + "/notifications"
@@ -373,7 +373,7 @@ class Api:
         self._property_settings_webhook_url = response_data["webhook_url"]
         print("property_settings: ", response.text)
 
-    def _property_settings_by_property_id(self, property_id) -> None:
+    def _property_settings_by_property_id(self, property_id: str) -> None:
         """this sends a request to get the settings of a specified property"""
         self._check_token()
         property_settings_url = FETCH_PROPERTY_SETTINGS_RESOURCE + property_id + "/settings"
@@ -383,7 +383,7 @@ class Api:
         )
         print("property settings by specified property id: ", response.text)
 
-    def _signals_by_property_id(self, property_id) -> None:
+    def _signals_by_property_id(self, property_id: str) -> None:
         """this sends a request to get the signals of a specified property"""
         self._check_token()
         property_signals_url = FETCH_PROPERTY_SETTINGS_RESOURCE + property_id + "/signals"
@@ -393,7 +393,7 @@ class Api:
         )
         print("signals by specified property id: ", response.text)
 
-    def _sonics_by_signal_id(self, signal_id) -> None:
+    def _sonics_by_signal_id(self, signal_id: str) -> None:
         """this sends a request to get the signals of a specified property"""
         self._check_token()
         sonics_signals_url = LIST_SIGNALS_RESOURCE + "/" + signal_id + "/sonics"
@@ -403,7 +403,7 @@ class Api:
         )
         print("sonics by specified signal id: ", response.text)
 
-    def _incidents_by_property_id(self, property_id) -> None:
+    def _incidents_by_property_id(self, property_id: str) -> None:
         """this sends a request to get the incidents of a specified property"""
         self._check_token()
         property_incidents_url = FETCH_PROPERTY_SETTINGS_RESOURCE + property_id + "/incidents"
@@ -441,7 +441,7 @@ class Api:
         )
         print("reset_password_request status_code: ", str(response.status_code), response.text)
 
-    def _action_incident(self, incident_id, incident_action: str) -> None:
+    def _action_incident(self, incident_id: str, incident_action: str) -> None:
         """Transitioning an incident to a different state"""
         self._check_token()
         incident_id_url = LIST_INCIDENTS_RESOURCE + "/" + incident_id + "/action"
@@ -453,3 +453,51 @@ class Api:
             }
         )
         print("Incident " + incident_action + " completed: " + response.text)
+
+    def _update_property(self, property_id: str, **kwargs) -> None:
+        self._check_token()
+        """The key/values pairs that can be updated are:
+        active	(boolean) - Whether the property is active or not
+        address (string) - Property address
+        city (string) - Property city
+        country (string) - Property country
+        lat	(number) - Property latitude
+        lng	(number) - Property longitude
+        name (string) - Property name
+        postcode (string) - Property postcode
+        uprn (string) - Property uprn"""
+        update_property_address = LIST_PROPERTIES_RESOURCE + "/" + property_id
+        response = requests.put(
+            update_property_address,
+            headers=self._authenticated_headers(),
+            **kwargs
+        )
+        print("Property Details Updated: ", response.text)
+
+    def _update_signal(self, signal_id: str, signal_name: str) -> None:
+        self._check_token()
+        """this sends a request to updated the name of the specified signal device
+        name is the only value that can be updated at this endpoint"""
+        update_signal_address = LIST_SIGNALS_RESOURCE + "/" + signal_id
+        response = requests.put(
+            update_signal_address,
+            headers=self._authenticated_headers(),
+            json={
+                "name": f"{signal_name}",
+            }
+        )
+        print("Signal Name Updated: ", response.text)
+
+    def _update_sonic(self, sonic_id: str, sonic_name: str) -> None:
+        self._check_token()
+        """this sends a request to updated the name of the specified sonic device.
+        Name is the only value that can be updated at this endpoint"""
+        update_sonic_address = LIST_SONICS_RESOURCE + "/" + sonic_id
+        response = requests.put(
+            update_sonic_address,
+            headers=self._authenticated_headers(),
+            json={
+                "name": f"{sonic_name}",
+            }
+        )
+        print("Sonic Name Updated: ", response.text)
