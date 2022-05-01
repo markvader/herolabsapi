@@ -1,9 +1,15 @@
 TO DO
+- methods for remaining endpoints
+    - get /ape/v1/sonics_wifi ,
+    - get /ape/v1/sonics_wifi/{id}
+    - put /ape/v1/properties/{property_id}/notifications
+    - put /ape/v1/properties/{property_id}/settings
+    - put /ape/v1/sonics_wifi/{id}
 - initiate session properly
-- rewrite for asynchronous code (will need to use aiohttp rather than requests)
+- rewrite for asynchronous code (may need to use aiohttp rather than requests)
 - functions - appropriate returns
 - appropriate handling for users with multiple sonics, signals or properties, at the minute i only utilise first devices returned
-- hide print statements
+- hide unnecessary print statements
 - capturing full log of incidents, displaying all/open/last etc
 - add logging to all
 
