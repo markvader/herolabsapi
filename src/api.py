@@ -187,10 +187,10 @@ class Api:
         self._sonic_status = response_data["data"][0]["status"]
         self._sonic_valve_state = response_data["data"][0]["valve_state"]
 
-    def _retrieve_sonics_wifi(self, property_id: str) -> None:
+    def _retrieve_sonics_wifi(self) -> None:
         self._check_token()
         """this sends a request to get a list of sonic wifi"""
-        sonic_wifi_url = FETCH_NOTIFICATION_SETTINGS_RESOURCE + property_id + "/sonics_wifi"
+        sonic_wifi_url = LIST_SONICS_WIFI_RESOURCE
         response = requests.get(
             sonic_wifi_url,
             headers=self._authenticated_headers()

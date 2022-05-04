@@ -2,9 +2,8 @@
 
 # Ignored files
 config.ini
-#not uploading for now
-sonic.py
 
 
 # Ignored Folders
 __pycache__/
+resources/

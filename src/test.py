@@ -27,7 +27,7 @@ apiObj = Api(herolabs_email, herolabs_password)
 # sonics = apiObj._retrieve_sonics()
 # sonic_by_id = apiObj._retrieve_sonic_by_id(demo_sonic_id)
 # sonics_by_signal_id = apiObj._sonics_by_signal_id(demo_signal_id)
-# sonics_wifi = apiObj._retrieve_sonics_wifi(demo_property_id)
+sonics_wifi = apiObj._retrieve_sonics_wifi()
 
 # telemetry = apiObj._sonic_telemetry()
 # valve_control = apiObj._sonic_valve("close")
