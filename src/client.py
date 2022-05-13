@@ -177,7 +177,6 @@ class Client:
         if not self._user_id:
             self._user_id = token_resp["user_details"]["id"]
             assert self._user_id
-            # print("user id retrieved: " + self._user_id)
             self.user = User(self._async_request, self._user_id)
 
     async def invalidate_token(self) -> None:
