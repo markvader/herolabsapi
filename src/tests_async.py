@@ -25,6 +25,9 @@ async def main() -> None:
             sonic_details = await client.sonic.async_get_sonic_details()
             _LOGGER.info(sonic_details)
 
+            sonic_wifi_details = await client.sonic.async_get_sonic_wifi()
+            _LOGGER.info(sonic_wifi_details)
+
             # Invalidate user token
             # invalidate_token = await client.invalidate_token()
             # _LOGGER.info(invalidate_token)
