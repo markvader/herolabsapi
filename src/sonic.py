@@ -29,6 +29,23 @@ class Sonic:
         if not self._sonic_total_sonics:
             self._sonic_total_sonics = data["total_entries"]
             assert self._sonic_total_sonics
+        if not self._first_sonic_id:
+            self._first_sonic_id = data["data"][0]["id"]
+            assert self._first_sonic_id
+            print(self._first_sonic_id)
+        if not self._first_sonic_name:
+            self._first_sonic_name = data["data"][0]["name"]
+            assert self._first_sonic_name
+            print(self._first_sonic_name)
+        print(self._first_sonic_status)
+        if self._first_sonic_status is not None:
+            self._first_sonic_status = data["data"][0]["status"]
+            assert self._first_sonic_status
+            print(self._first_sonic_status)
+        if not self._first_sonic_valve_state:
+            self._first_sonic_valve_state = data["data"][0]["valve_state"]
+            assert self._first_sonic_valve_state
+            print(self._first_sonic_valve_state)
         return data
 
     # async def async_update_user_details(self, user_updates_payload: str) -> None:
