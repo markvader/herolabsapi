@@ -62,6 +62,13 @@ class Sonic:
         data = await self._async_request("get", LIST_SONICS_WIFI_RESOURCE)
         return data
 
+    async def async_get_sonic_by_id(self, queried_sonic_id: str) -> dict:
+        """this sends a request to get the details of a specified sonic device"""
+        sonic_id = queried_sonic_id
+        sonic_id_url = f"{LIST_SONICS_RESOURCE}{sonic_id}"
+        data = await self._async_request("get", sonic_id_url)
+        return data
+
 
     # async def async_update_user_details(self, user_updates_payload: str) -> None:
     #     """Update the user details."""
@@ -71,7 +78,6 @@ class Sonic:
 
     #
     # def _retrieve_sonic_by_id(self, sonic_id: str) -> None:
-    #     """this sends a request to get the details of a specified sonic device"""
     #     self._check_token()
     #     sonic_id_url = const.LIST_SONICS_RESOURCE + "/" + sonic_id
     #     response = requests.get(

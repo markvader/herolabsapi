@@ -11,6 +11,7 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 herolabs_email = config['DEFAULT']['EMAIL']
 herolabs_password = config['DEFAULT']['PASSWORD']
+demo_sonic_id = config['DEMO_DATA']['SONIC_ID_SAMPLE']
 
 
 async def main() -> None:
@@ -27,6 +28,9 @@ async def main() -> None:
 
             sonic_wifi_details = await client.sonic.async_get_sonic_wifi()
             _LOGGER.info(sonic_wifi_details)
+
+            sonic_details_by_id = await client.sonic.async_get_sonic_by_id(demo_sonic_id)
+            _LOGGER.info(sonic_details_by_id)
 
             # Invalidate user token
             # invalidate_token = await client.invalidate_token()

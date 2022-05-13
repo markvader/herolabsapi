@@ -16,7 +16,7 @@ FETCH_PROPERTY_SETTINGS_RESOURCE: str = "ape/v1/properties/"  # +PROPERTY_ID+"/s
 # signals resource endpoints
 LIST_SIGNALS_RESOURCE: str = "ape/v1/signals"
 # sonics resource endpoints
-LIST_SONICS_RESOURCE: str = "ape/v1/sonics"
+LIST_SONICS_RESOURCE: str = "ape/v1/sonics/"
 LIST_SONICS_WIFI_RESOURCE: str = "ape/v1/sonics_wifi"
 LIST_TELEMETRY_RESOURCE: str = "ape/v1/sonics/"  # +SONIC_ID+"/telemetry"
 SONIC_VALVE_RESOURCE: str = "ape/v1/sonics/"  # +SONIC_ID+"/valve"
