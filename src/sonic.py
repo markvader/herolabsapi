@@ -4,49 +4,40 @@
 from __future__ import annotations
 
 import json
-from typing import Awaitable, Callable
-from const import USER_RESOURCE
+from typing import Awaitable, Callable, Optional
+from const import LIST_SONICS_RESOURCE
 
 
 class Sonic:
     """Define the sonic manager object."""
 
-    def __init__(self, async_request: Callable[..., Awaitable], sonic_id: str) -> None:
+    def __init__(self, async_request: Callable[..., Awaitable]) -> None:
         """Initialize."""
-        self._async_request = async_request
-        self._sonic_id: str = sonic_id
+        self._async_request: Callable[..., Awaitable] = async_request
 
-    async def async_get_user_details(self) -> dict:
-        """Return the user details."""
-        user_details_url = f"{USER_RESOURCE}{self._sonic_id}"
-        data = await self._async_request("get", user_details_url)
+        self._sonic_total_sonics: Optional[int] = None
+        self._first_sonic_id: Optional[str] = None
+
+        self._first_sonic_name: Optional[str] = None
+        self._first_sonic_status: Optional[str] = None
+        self._first_sonic_valve_state: Optional[str] = None
+
+    async def async_get_sonic_details(self) -> dict:
+        """Return the list of sonic devices."""
+        data = await self._async_request("get", LIST_SONICS_RESOURCE)
+        # Should insert additional check here in case the number of sonic device has increased since last polling
+        if not self._sonic_total_sonics:
+            self._sonic_total_sonics = data["total_entries"]
+            assert self._sonic_total_sonics
         return data
 
-    async def async_update_user_details(self, user_updates_payload: str) -> None:
-        """Update the user details."""
-        update_user_details_url = f"{USER_RESOURCE}{self._sonic_id}"
-        # For multiple changes use comma separation dictionary {'last_name': 'testLastName', 'language': 'en'}
-        #     # These are passed as arguments in the function.
-        #     # The updatable options are "email", "first_name", "last_name", "phone" (e.g "+447712345678")
-        #     # & "language" (passed as a language value i.e "en", "pl")
-        data = await self._async_request("put", update_user_details_url, data=json.dumps(user_updates_payload))
-        return data
+    # async def async_update_user_details(self, user_updates_payload: str) -> None:
+    #     """Update the user details."""
+    #     update_user_details_url = f"{USER_RESOURCE}{self._sonic_id}"
+    #     data = await self._async_request("put", update_user_details_url, data=json.dumps(user_updates_payload))
+    #     return data
 
 
-
-
-
-
-    #
-    # def _retrieve_sonics(self) -> None:
-    #     self._check_token()
-    #     """this sends a request to get a list of sonic devices token"""
-    #     response = requests.get(
-    #         const.LIST_SONICS_RESOURCE,
-    #         headers=self._authenticated_headers()
-    #     )
-    #     response_data = response.json()
-    #     print("retrieve_sonics: ", response.text)
     #     self._sonic_total_sonics = response_data["total_entries"]
     #     # For now, I am only storing the first sonic device
     #     self._sonic_id = response_data["data"][0]["id"]

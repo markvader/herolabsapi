@@ -7,6 +7,7 @@ from typing import Any, TypedDict, cast, Optional
 from errors import InvalidCredentialsError, raise_client_error
 from const import BASE_RESOURCE, AUTH_RESOURCE, REFRESH_TOKEN_RESOURCE, SIGN_OUT_RESOURCE
 from user import User
+from sonic import Sonic
 from datetime import datetime, timedelta
 
 LOGGER = logging.getLogger(__package__)
@@ -33,11 +34,12 @@ class Client:
         self._request_retries = request_retries
         self._request_retry_delay = request_retry_delay
         self._session = session
+        self.sonic = Sonic(self._async_request)
 
         # Intended to be populated by async_authenticate():
         self._token: str | None = None
-        self._token_expiration: Optional[datetime] = None
-        self._token_renewal_time: Optional[datetime] = None
+        self._token_expiration: Optional[datetime] = None  # I am not currently doing anything with this
+        self._token_renewal_time: Optional[datetime] = None  # I am not currently doing anything with this
         self._user_id: str | None = None
 
         # Intended to be populated by async_login():
@@ -49,15 +51,8 @@ class Client:
         # self._property_id: Optional[str] = None
         # self._incident_id: Optional[str] = None
         #
-        # self._sonic_total_sonics: Optional[int] = None
         # self._signal_total_signals: Optional[int] = None
-
-        # self._sonic_id: Optional[str] = None
         # self._signal_id: Optional[str] = None
-
-        # self._sonic_name: Optional[str] = None
-        # self._sonic_status: Optional[str] = None
-        # self._sonic_valve_state: Optional[str] = None
 
     @classmethod
     async def async_login(
@@ -91,7 +86,12 @@ class Client:
         """Make an API request."""
         url = f"{BASE_RESOURCE}/{endpoint}"
 
-        kwargs.setdefault("headers", {'Content-Type': 'application/json'})
+        kwargs.setdefault("headers", {})
+        kwargs["headers"].update(
+            {
+                "Content-Type": 'application/json',
+            }
+        )
 
         use_running_session = self._session and not self._session.closed
         if use_running_session:
@@ -166,7 +166,7 @@ class Client:
             str,
             await self._async_request(
                 "post", AUTH_RESOURCE,
-                headers={'Content-Type': 'application/json'},
+                # headers={'Content-Type': 'application/json'},
                 json={'email': self._email, 'password': self._password}
             ),
         )

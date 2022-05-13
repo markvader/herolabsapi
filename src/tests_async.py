@@ -22,6 +22,9 @@ async def main() -> None:
             user_details = await client.user.async_get_user_details()
             _LOGGER.info(user_details)
 
+            sonic_details = await client.sonic.async_get_sonic_details()
+            _LOGGER.info(sonic_details)
+
             # Invalidate user token
             # invalidate_token = await client.invalidate_token()
             # _LOGGER.info(invalidate_token)
