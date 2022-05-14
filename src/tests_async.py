@@ -24,16 +24,16 @@ async def main() -> None:
             # _LOGGER.info(user_details)
 
             # Get Sonic(s) Device Details
-            # sonic_details = await client.sonic.async_get_sonic_details()
-            # _LOGGER.info(sonic_details)
+            sonic_details = await client.sonic.async_get_sonic_details()
+            _LOGGER.info(sonic_details)
             #
             # Get Sonic Wi-fi Details
             # sonic_wifi_details = await client.sonic.async_get_sonic_wifi()
             # _LOGGER.info(sonic_wifi_details)
             #
             # Get Sonic Device Details by Sonic ID
-            # sonic_details_by_id = await client.sonic.async_get_sonic_by_sonic_id(demo_sonic_id)
-            # _LOGGER.info(sonic_details_by_id)
+            sonic_details_by_id = await client.sonic.async_get_sonic_by_sonic_id(demo_sonic_id)
+            _LOGGER.info(sonic_details_by_id)
             #
             # Update Sonic Device Details by Sonic ID
             # update_sonic_details_by_id = await client.sonic.async_update_sonic_by_sonic_id(
@@ -44,11 +44,11 @@ async def main() -> None:
             # update_first_sonic = await client.sonic.async_update_first_sonic("Updated Sonic Name")
             # _LOGGER.info(update_first_sonic)
             #
-            # # Get Sonic Telemetry by Sonic ID
+            # Get Sonic Telemetry by Sonic ID
             # sonic_telemetry_by_id = await client.sonic.async_sonic_telemetry_by_id(demo_sonic_id)
             # _LOGGER.info(sonic_telemetry_by_id)
             #
-            # # Get First Sonic Telemetry
+            # Get First Sonic Telemetry
             # first_sonic_telemetry = await client.sonic.async_first_sonic_telemetry()
             # _LOGGER.info(first_sonic_telemetry)
 
@@ -64,6 +64,15 @@ async def main() -> None:
             # Request Password Reset Email
             # request_password_reset = await client.user.async_reset_password_request("useremail@emailprovider.com")
             # _LOGGER.info(request_password_reset)
+
+            # Request Password Reset Email
+            # request_password_reset = await client.user.async_reset_password_request("useremail@emailprovider.com")
+            # _LOGGER.info(request_password_reset)
+
+            # Control Sonic Valve by ID
+            # valve_control = await client.sonic.async_sonic_valve_control_by_id(demo_sonic_id, "close")
+            valve_control = await client.sonic.async_sonic_valve_control_by_id(demo_sonic_id, "open")
+            _LOGGER.info(valve_control)
 
         except HeroLabsError as err:
             _LOGGER.error("There was an error: %s", err)

@@ -3,6 +3,7 @@
 """Define an API endpoint manager for Sonic data & actions."""
 from __future__ import annotations
 
+import asyncio
 import json
 from datetime import datetime
 from typing import Awaitable, Callable, Optional
@@ -19,6 +20,17 @@ class Sonic:
         self._sonic_total_sonics: Optional[int] = None
         self._first_sonic_id: Optional[str] = None
 
+        self._sonic_name: Optional[str] = None
+        self._sonic_status: Optional[str] = None
+        self._sonic_valve_state: Optional[str] = None
+        self._sonic_auto_shutoff_enabled: Optional[bool] = None
+        self._sonic_auto_shutoff_time_limit: Optional[int] = None
+        self._sonic_auto_shutoff_volume_limit: Optional[int] = None
+        self._sonic_battery_level: Optional[str] = None
+        self._sonic_radio_connection: Optional[str] = None
+        self._sonic_radio_rssi: Optional[int] = None
+        self._sonic_serial_no: Optional[str] = None
+
         self._first_sonic_name: Optional[str] = None
         self._first_sonic_status: Optional[str] = None
         self._first_sonic_valve_state: Optional[str] = None
@@ -29,11 +41,13 @@ class Sonic:
         self._first_sonic_radio_connection: Optional[str] = None
         self._first_sonic_radio_rssi: Optional[int] = None
         self._first_sonic_serial_no: Optional[str] = None
+
         self._sonic_telemetry_probe_time_timestamp: Optional[int] = None
         self._sonic_telemetry_probe_time_datetime: Optional[datetime] = None
         self._sonic_telemetry_pressure: Optional[int] = None
         self._sonic_telemetry_water_flow: Optional[float] = None
         self._sonic_telemetry_water_temp: Optional[float] = None
+
         self._first_sonic_telemetry_probe_time_timestamp: Optional[int] = None
         self._first_sonic_telemetry_probe_time_datetime: Optional[datetime] = None
         self._first_sonic_telemetry_pressure: Optional[int] = None
@@ -77,6 +91,22 @@ class Sonic:
         """this sends a request to get the details of a specified sonic device"""
         sonic_id_url = f"{LIST_SONICS_RESOURCE}{sonic_id}"
         data = await self._async_request("get", sonic_id_url)
+        if not self._sonic_name:
+            self._sonic_name = data["name"]
+            assert self._sonic_name
+        if self._sonic_status is not None:
+            self._sonic_status = data["status"]
+            assert self._sonic_status
+        if not self._sonic_valve_state:
+            self._sonic_valve_state = data["valve_state"]
+            assert self._sonic_valve_state
+            self._sonic_auto_shutoff_enabled = data["auto_shut_off_enabled"]
+            self._sonic_auto_shutoff_time_limit = data["auto_shut_off_time_limit"]
+            self._sonic_auto_shutoff_volume_limit = data["auto_shut_off_volume_limit"]
+            self._sonic_battery_level = data["battery"]
+            self._sonic_radio_connection = data["radio_connection"]
+            self._sonic_radio_rssi = data["radio_rssi"]
+            self._sonic_serial_no = data["serial_no"]
         return data
 
     async def async_update_sonic_by_sonic_id(self, sonic_id: str, sonic_name: str) -> None:
@@ -115,29 +145,17 @@ class Sonic:
         self._first_sonic_telemetry_water_temp = data["water_temp"]
         return data
 
-    # def _sonics_by_signal_id(self, signal_id: str) -> None:
-    #     """this sends a request to get the signals of a specified property"""
-    #     self._check_token()
-    #     sonics_signals_url = const.LIST_SIGNALS_RESOURCE + "/" + signal_id + "/sonics"
-    #     response = requests.get(
-    #         sonics_signals_url,
-    #         headers=self._authenticated_headers(),
-    #     )
-    #     print("sonics by specified signal id: ", response.text)
-    #
+    async def async_sonic_valve_control_by_id(self, sonic_id: str, valve_action: str) -> None:
+        """Open / Close Valve by calling a specified sonic_id. valve_action options are "open" or "close" """
+        sonic_id_url = f"{LIST_TELEMETRY_RESOURCE}{sonic_id}/valve"
+        print("current state: "+self._sonic_valve_state)
+        print("valve will now: " + valve_action)
+        await self._async_request("put", sonic_id_url, json={"action": f"{valve_action}"})
+        # Valve action does change as instructed but _async_request fails here and reports Invalid credentials.
+        # Have tested this endpoint call independently and no content is returned but status 200 is received.
+        await asyncio.sleep(10) # wait x seconds and get sonic status and display it
+        self.async_get_sonic_by_sonic_id(sonic_id)
+        print(self._sonic_valve_state)
+        return
 
-    # def _sonic_valve(self, valve_action: str):
-    #     self._retrieve_sonics()
-    #     """A telemetry object contains the latest telemetry details from a Sonic
-    #      such as pressure, temperature etc."""
-    #     sonic_valve_url = const.SONIC_VALVE_RESOURCE + self._sonic_id + "/valve"
-    #     response = requests.put(
-    #         sonic_valve_url,
-    #         headers=self._authenticated_headers(),
-    #         json={
-    #             "action": f"{valve_action}",  # options are open or close
-    #         }
-    #     )
-    #     print("sonic_valve status_code: ", str(response.status_code), ", valve will now ", valve_action
-    #           + response.text)
 
