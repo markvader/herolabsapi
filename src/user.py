@@ -30,7 +30,7 @@ class User:
         data = await self._async_request("put", update_user_details_url, data=json.dumps(user_updates_payload))
         return data
 
-    async def async_reset_password_request(self, user_email: str) -> None:
+    async def async_reset_password_request(self, user_email: str) -> str:
         """Requests reset password email with further instructions."""
-        data = await self._async_request("post", RESET_PASSWORD_RESOURCE, json={"email": f"{user_email}"})
+        await self._async_request("post", RESET_PASSWORD_RESOURCE, json={"email": f"{user_email}"})
         return "Password reset email has been requested"
