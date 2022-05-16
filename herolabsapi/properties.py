@@ -3,7 +3,10 @@ from __future__ import annotations
 
 from typing import Awaitable, Callable, Optional
 
-from herolabsapi.const import LIST_PROPERTIES_RESOURCE, FETCH_PROPERTY_SETTINGS_RESOURCE, FETCH_NOTIFICATION_SETTINGS_RESOURCE
+from herolabsapi.const import (
+    LIST_PROPERTIES_RESOURCE,
+    FETCH_PROPERTY_SETTINGS_RESOURCE,
+    FETCH_NOTIFICATION_SETTINGS_RESOURCE,)
 
 
 class Properties:
