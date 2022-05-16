@@ -6,14 +6,15 @@ import logging
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError, ContentTypeError
 from typing import Any, cast, Optional
-from errors import InvalidCredentialsError, raise_client_error
-from const import BASE_RESOURCE, AUTH_RESOURCE, REFRESH_TOKEN_RESOURCE, SIGN_OUT_RESOURCE
-from user import User
-from sonic import Sonic
-from signals import Signals
-from incidents import Incidents
-from properties import Properties
 from datetime import datetime
+
+from herolabsapi.errors import InvalidCredentialsError, raise_client_error
+from herolabsapi.const import BASE_RESOURCE, AUTH_RESOURCE, REFRESH_TOKEN_RESOURCE, SIGN_OUT_RESOURCE
+from herolabsapi.user import User
+from herolabsapi.sonic import Sonic
+from herolabsapi.signals import Signals
+from herolabsapi.incidents import Incidents
+from herolabsapi.properties import Properties
 
 LOGGER = logging.getLogger(__package__)
 
@@ -113,10 +114,6 @@ class Client:
             async with session.request(method, url, **kwargs) as resp:
                 try:
                     data = await resp.json()
-                    # print(resp.status)
-                    # print(resp.headers)
-                    # await print(resp.json())
-                    # await print(resp.text())
                 except ContentTypeError:
                     # A ContentTypeError is assumed to be a credentials issue except in the case of the valve control
                     # & invalidate token endpoints which do not return any json response, so we must catch here

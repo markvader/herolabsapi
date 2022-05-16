@@ -10,16 +10,12 @@ Methods / functions
 - appropriate returns
 - hide/remove unnecessary print statements
 
-OOP
-- handle session object properly
-- rewrite for asynchronous code (may need to use aiohttp rather than requests)
-
 OTHERS
 - capturing full log of incidents, let user chose to displaying all/open/last incidents etc.
 - add logging to library
 
 README
-- fix markdown in readme (formatting for / in table doesn't display in PYPI, needs encoded?)
+- fix markdown in readme (formatting for / in table doesn't display in PYPI, need to encode it?)
 - re-write readme
 
 In Progress:
@@ -30,10 +26,15 @@ later:
 - Refactor code (reduce duplication of lines calling request library)
 - Separate functions to different files if appropriate, authentication & user functions, device interactions (sonics & signals), incidents
 
+Questions for hero labs developers - how many users have multiple sonics/signals/properties
+
 DONE
 Check commits for all progress, lots more than just these
 - create and use function for common headers
 - set token expiry
 - initiate checks for token being present, check if token valid, if not request one, if expiring soon, renew it.
-- functions - timestamps returned in telemetry and signals json response, converted to datetime (do I want to do this in the library or leave it to Home assistant etc)
+- functions - timestamps returned in telemetry and signals json response, converted to datetime
+(do I want to do this in the library or leave it to Home assistant etc.)
+- handle session object properly
+- rewrite for asynchronous code (may need to use aiohttp rather than requests)
 

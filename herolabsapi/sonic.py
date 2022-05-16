@@ -4,7 +4,8 @@ from __future__ import annotations
 import asyncio
 from datetime import datetime
 from typing import Awaitable, Callable, Optional
-from const import LIST_SONICS_RESOURCE, LIST_SONICS_WIFI_RESOURCE, LIST_TELEMETRY_RESOURCE
+
+from herolabsapi.const import LIST_SONICS_RESOURCE, LIST_SONICS_WIFI_RESOURCE, LIST_TELEMETRY_RESOURCE
 
 
 class Sonic:

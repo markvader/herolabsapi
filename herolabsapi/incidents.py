@@ -1,9 +1,9 @@
-""""Define an API endpoint manager for Incidents data & actions."""
+"""Define an API endpoint manager for Incidents data & actions."""
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Awaitable, Callable, Optional
-from const import LIST_INCIDENTS_RESOURCE, LIST_PROPERTIES_RESOURCE
+
+from herolabsapi.const import LIST_INCIDENTS_RESOURCE, LIST_PROPERTIES_RESOURCE
 
 
 class Incidents:

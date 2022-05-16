@@ -3,7 +3,8 @@ from __future__ import annotations
 
 import json
 from typing import Awaitable, Callable
-from const import USER_RESOURCE, RESET_PASSWORD_RESOURCE 
+
+from herolabsapi.const import USER_RESOURCE, RESET_PASSWORD_RESOURCE
 
 
 class User:

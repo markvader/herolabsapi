@@ -1,9 +1,10 @@
 import asyncio
 import logging
-from aiohttp import ClientSession
 import configparser
-from client import Client
-from errors import HeroLabsError
+from aiohttp import ClientSession
+
+from herolabsapi.client import Client
+from herolabsapi.errors import HeroLabsError
 
 _LOGGER = logging.getLogger()
 
@@ -25,8 +26,8 @@ async def main() -> None:
 
             # USER API CALLS
             # Discover user details
-            # user_details = await client.user.async_get_user_details()
-            # _LOGGER.info(user_details)
+            user_details = await client.user.async_get_user_details()
+            _LOGGER.info(user_details)
 
             # Invalidate User Token
             # invalidate_token = await client.invalidate_token()

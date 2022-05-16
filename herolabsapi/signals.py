@@ -1,9 +1,10 @@
-""""Define an API endpoint manager for Signals data & actions."""
+"""Define an API endpoint manager for Signals data & actions."""
 from __future__ import annotations
 
 from datetime import datetime
 from typing import Awaitable, Callable, Optional
-from const import LIST_SIGNALS_RESOURCE, FETCH_PROPERTY_SETTINGS_RESOURCE, FETCH_NOTIFICATION_SETTINGS_RESOURCE
+
+from herolabsapi.const import LIST_SIGNALS_RESOURCE, FETCH_PROPERTY_SETTINGS_RESOURCE
 
 
 class Signals:
@@ -17,11 +18,11 @@ class Signals:
 
         self._total_signals: Optional[int] = None
         self._signal_id: Optional[str] = None
-        self._signal_boot_time_timestamp: Optional[int] = None
-        self._signal_boot_time_datetime: Optional[datetime.datetime] = None
+        self._signal_boot_timestamp: Optional[int] = None
+        self._signal_boot_datetime = None
         self._signal_cloud_connection: Optional[str] = None
-        self._signal_modem_boot_time_timestamp: Optional[int] = None
-        self._signal_modem_boot_time_datetime: Optional[datetime.datetime] = None
+        self._signal_modem_boot_timestamp: Optional[int] = None
+        self._signal_modem_boot_datetime = None
         self._signal_modem_version: Optional[str] = None
         self._signal_name: Optional[str] = None
         self._signal_serial_no: Optional[str] = None
@@ -29,11 +30,11 @@ class Signals:
         self._signal_wifi_rssi: Optional[int] = None
 
         self._first_signal_id: Optional[str] = None
-        self._first_signal_boot_time_timestamp: Optional[int] = None
-        self._first_signal_boot_time_datetime: Optional[datetime.datetime] = None
+        self._first_signal_boot_timestamp: Optional[int] = None
+        self._first_signal_boot_datetime = None
         self._first_signal_cloud_connection: Optional[str] = None
-        self._first_signal_modem_boot_time_timestamp: Optional[int] = None
-        self._first_signal_modem_boot_time_datetime: Optional[datetime.datetime] = None
+        self._first_signal_modem_boot_timestamp: Optional[int] = None
+        self._first_signal_modem_boot_datetime = None
         self._first_signal_modem_version: Optional[str] = None
         self._first_signal_name: Optional[str] = None
         self._first_signal_serial_no: Optional[str] = None
@@ -55,11 +56,11 @@ class Signals:
             self._total_signals = data["total_entries"]
             assert self._total_signals
         self._first_signal_id = data["data"][0]["id"]
-        self._first_signal_boot_time_timestamp = data["data"][0]["boot_time"]
-        self._first_signal_boot_time_datetime = datetime.fromtimestamp(self._first_signal_boot_time_timestamp)
+        self._first_signal_boot_timestamp = data["data"][0]["boot_time"]
+        self._first_signal_boot_datetime = datetime.fromtimestamp(self._first_signal_boot_timestamp)
         self._first_signal_cloud_connection = data["data"][0]["cloud_connection"]
-        self._first_signal_modem_boot_time_timestamp = data["data"][0]["modem_boot_time"]
-        self._first_signal_modem_boot_time_datetime = datetime.fromtimestamp(self._first_signal_modem_boot_time_timestamp)
+        self._first_signal_modem_boot_timestamp = data["data"][0]["modem_boot_time"]
+        self._first_signal_modem_boot_datetime = datetime.fromtimestamp(self._first_signal_modem_boot_timestamp)
         self._first_signal_modem_version = data["data"][0]["modem_version"]
         self._first_signal_name = data["data"][0]["name"]
         self._first_signal_serial_no = data["data"][0]["serial_no"]
@@ -72,16 +73,17 @@ class Signals:
         signal_id_url = f"{LIST_SIGNALS_RESOURCE}{signal_id}"
         data = await self._async_request("get", signal_id_url)
         self._signal_id = data["id"]
-        self._signal_boot_time_timestamp = data["boot_time"]
-        self._signal_boot_time_datetime = datetime.fromtimestamp(self._signal_boot_time_timestamp)
+        self._signal_boot_timestamp = data["boot_time"]
+        self._signal_boot_datetime = datetime.fromtimestamp(self._signal_boot_timestamp)
         self._signal_cloud_connection = data["cloud_connection"]
-        self._signal_modem_boot_time_timestamp = data["modem_boot_time"]
-        self._signal_modem_boot_time_datetime = datetime.fromtimestamp(self._signal_modem_boot_time_timestamp)
+        self._signal_modem_boot_timestamp = data["modem_boot_time"]
+        self._signal_modem_boot_datetime = datetime.fromtimestamp(self._signal_modem_boot_timestamp)
         self._signal_modem_version = data["modem_version"]
         self._signal_name = data["name"]
         self._signal_serial_no = data["serial_no"]
         self._signal_version = data["version"]
         self._signal_wifi_rssi = data["wifi_rssi"]
+        print(type(self._signal_boot_datetime))
         return data
 
     async def async_get_signal_details_by_property_id(self, property_id: str) -> dict:
@@ -89,11 +91,11 @@ class Signals:
         property_signals_url = f"{FETCH_PROPERTY_SETTINGS_RESOURCE}{property_id}/signals"
         data = await self._async_request("get", property_signals_url)
         self._signal_id = data["id"]
-        self._signal_boot_time_timestamp = data["boot_time"]
-        self._signal_boot_time_datetime = datetime.fromtimestamp(self._signal_boot_time_timestamp)
+        self._signal_boot_timestamp = data["boot_time"]
+        self._signal_boot_datetime = datetime.fromtimestamp(self._signal_boot_timestamp)
         self._signal_cloud_connection = data["cloud_connection"]
-        self._signal_modem_boot_time_timestamp = data["modem_boot_time"]
-        self._signal_modem_boot_time_datetime = datetime.fromtimestamp(self._signal_modem_boot_time_timestamp)
+        self._signal_modem_boot_timestamp = data["modem_boot_time"]
+        self._signal_modem_boot_datetime = datetime.fromtimestamp(self._signal_modem_boot_timestamp)
         self._signal_modem_version = data["modem_version"]
         self._signal_name = data["name"]
         self._signal_serial_no = data["serial_no"]
