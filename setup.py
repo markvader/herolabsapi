@@ -5,8 +5,8 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='herolabsapi',
-    version='0.1.1',
-    packages=['src'],
+    version='0.2.0',
+    packages=['herolabsapi'],
     url='https://github.com/markvader/herolabsapi',
     license='MIT',
     author='Mark Breen',
