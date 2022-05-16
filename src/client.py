@@ -11,6 +11,7 @@ from const import BASE_RESOURCE, AUTH_RESOURCE, REFRESH_TOKEN_RESOURCE, SIGN_OUT
 from user import User
 from sonic import Sonic
 from signals import Signals
+from incidents import Incidents
 from properties import Properties
 from datetime import datetime
 
@@ -41,6 +42,7 @@ class Client:
         self.sonic = Sonic(self._async_request)
         self.property = Properties(self._async_request)
         self.signal = Signals(self._async_request)
+        self.incidents = Incidents(self._async_request)
 
         # Intended to be populated by async_authenticate():
         self._token: str | None = None
@@ -54,11 +56,6 @@ class Client:
 
         # These endpoints will get instantiated post-authentication:
         self.user: Optional[User] = None
-        # self._property_id: Optional[str] = None
-        # self._incident_id: Optional[str] = None
-        #
-        # self._signal_total_signals: Optional[int] = None
-        # self._signal_id: Optional[str] = None
 
     @classmethod
     async def async_login(

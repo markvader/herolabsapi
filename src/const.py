@@ -21,4 +21,4 @@ LIST_SONICS_WIFI_RESOURCE: str = "ape/v1/sonics_wifi"
 LIST_TELEMETRY_RESOURCE: str = "ape/v1/sonics/"  # +SONIC_ID+"/telemetry"
 SONIC_VALVE_RESOURCE: str = "ape/v1/sonics/"  # +SONIC_ID+"/valve"
 # incidents resource endpoints
-LIST_INCIDENTS_RESOURCE: str = "ape/v1/incidents"
+LIST_INCIDENTS_RESOURCE: str = "ape/v1/incidents/"

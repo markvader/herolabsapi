@@ -14,6 +14,7 @@ herolabs_password = config['DEFAULT']['PASSWORD']
 demo_sonic_id = config['DEMO_DATA']['SONIC_ID_SAMPLE']
 demo_property_id = config['DEMO_DATA']['PROPERTY_ID_SAMPLE']
 demo_signal_id = config['DEMO_DATA']['SIGNAL_ID_SAMPLE']
+demo_incident_id = config['DEMO_DATA']['INCIDENT_ID_SAMPLE']
 
 
 async def main() -> None:
@@ -139,6 +140,25 @@ async def main() -> None:
             # Update Signal Device Name by Signal ID
             update_signal_name = await client.signal.async_update_signal_details(demo_signal_id, "Updated SignalName")
             _LOGGER.info(update_signal_name)
+
+            # INCIDENTS API CALLS
+            # Get Incidents
+            incidents = await client.incidents.async_get_incidents()
+            _LOGGER.info(incidents)
+
+            # Get Incident by ID
+            incident_details_by_id = await client.incidents.async_get_incident_details(demo_incident_id)
+            _LOGGER.info(incident_details_by_id)
+
+            # Get Incident by Property ID
+            incident_details_by_property = await client.incidents.async_get_incidents_by_property(demo_property_id)
+            _LOGGER.info(incident_details_by_property)
+
+            # Action an incident
+            dismiss_incident_by_id = await client.incidents.async_action_incident(demo_incident_id, "dismiss")
+            _LOGGER.info(dismiss_incident_by_id)
+            # reopen_incident_by_id = await client.incidents.async_action_incident(demo_incident_id, "reopen")
+            # _LOGGER.info(reopen_incident_by_id)
 
         except HeroLabsError as err:
             _LOGGER.error("There was an error: %s", err)

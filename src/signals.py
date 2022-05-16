@@ -1,4 +1,4 @@
-""""Define an API endpoint manager for Properties data & actions."""
+""""Define an API endpoint manager for Signals data & actions."""
 from __future__ import annotations
 
 from datetime import datetime
