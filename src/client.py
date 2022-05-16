@@ -113,8 +113,8 @@ class Client:
                 try:
                     data = await resp.json()
                     # print(resp.status)
-                    # await print(resp.json())
                     # print(resp.headers)
+                    # await print(resp.json())
                     # await print(resp.text())
                 except ContentTypeError:
                     # A ContentTypeError is assumed to be a credentials issue (since the

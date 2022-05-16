@@ -20,38 +20,11 @@ async def main() -> None:
     async with ClientSession() as session:
         try:
             client = await Client.async_login(herolabs_email, herolabs_password, session=session)
+
+            # USER API CALLS
             # Discover user details
             # user_details = await client.user.async_get_user_details()
             # _LOGGER.info(user_details)
-
-            # Get Sonic(s) Device Details
-            # sonic_details = await client.sonic.async_get_sonic_details()
-            # _LOGGER.info(sonic_details)
-            #
-            # Get Sonic Wi-fi Details
-            # sonic_wifi_details = await client.sonic.async_get_sonic_wifi()
-            # _LOGGER.info(sonic_wifi_details)
-            #
-            # Get Sonic Device Details by Sonic ID
-            # sonic_details_by_id = await client.sonic.async_get_sonic_by_sonic_id(demo_sonic_id)
-            # _LOGGER.info(sonic_details_by_id)
-            #
-            # Update Sonic Device Details by Sonic ID
-            # update_sonic_details_by_id = await client.sonic.async_update_sonic_by_sonic_id(
-            # demo_sonic_id, "Updated Sonic Name")
-            # _LOGGER.info(update_sonic_details_by_id)
-
-            # Update First Sonic Device Details
-            # update_first_sonic = await client.sonic.async_update_first_sonic("Updated Sonic Name")
-            # _LOGGER.info(update_first_sonic)
-            #
-            # Get Sonic Telemetry by Sonic ID
-            # sonic_telemetry_by_id = await client.sonic.async_sonic_telemetry_by_id(demo_sonic_id)
-            # _LOGGER.info(sonic_telemetry_by_id)
-            #
-            # Get First Sonic Telemetry
-            # first_sonic_telemetry = await client.sonic.async_first_sonic_telemetry()
-            # _LOGGER.info(first_sonic_telemetry)
 
             # Invalidate User Token
             # invalidate_token = await client.invalidate_token()
@@ -70,6 +43,36 @@ async def main() -> None:
             # request_password_reset = await client.user.async_reset_password_request("useremail@emailprovider.com")
             # _LOGGER.info(request_password_reset)
 
+            # SONIC API CALLS
+            # Get Sonic(s) Device Details
+            sonic_details = await client.sonic.async_get_sonic_details()
+            _LOGGER.info(sonic_details)
+            #
+            # Get Sonic Wi-fi Details
+            sonic_wifi_details = await client.sonic.async_get_sonic_wifi()
+            _LOGGER.info(sonic_wifi_details)
+            #
+            # Get Sonic Device Details by Sonic ID
+            sonic_details_by_id = await client.sonic.async_get_sonic_by_sonic_id(demo_sonic_id)
+            _LOGGER.info(sonic_details_by_id)
+            #
+            # Update Sonic Device Details by Sonic ID
+            # update_sonic_details_by_id = await client.sonic.async_update_sonic_by_sonic_id(
+            # demo_sonic_id, "Updated Sonic Name")
+            # _LOGGER.info(update_sonic_details_by_id)
+
+            # Update First Sonic Device Details
+            # update_first_sonic = await client.sonic.async_update_first_sonic("Updated Sonic Name")
+            # _LOGGER.info(update_first_sonic)
+            #
+            # Get Sonic Telemetry by Sonic ID
+            sonic_telemetry_by_id = await client.sonic.async_sonic_telemetry_by_id(demo_sonic_id)
+            _LOGGER.info(sonic_telemetry_by_id)
+            #
+            # Get First Sonic Telemetry
+            first_sonic_telemetry = await client.sonic.async_first_sonic_telemetry()
+            _LOGGER.info(first_sonic_telemetry)
+
             # Control Sonic Valve by ID
             # valve_control = await client.sonic.async_sonic_valve_control_by_id(demo_sonic_id, "close")
             # valve_control = await client.sonic.async_sonic_valve_control_by_id(demo_sonic_id, "open")
@@ -80,17 +83,26 @@ async def main() -> None:
             # # valve_control = await client.sonic.async_first_sonic_valve_control("open")
             # _LOGGER.info(valve_control)
 
-            # Property Calls
+            # PROPERTY API CALLS
             # Get Property/Properties Details
             total_properties = await client.property.async_get_total_properties()
             _LOGGER.info(total_properties)
+
             # Get Property/Properties Details
-            # property_details = await client.property.async_get_property_details()
-            # _LOGGER.info(property_details)
+            first_property_details = await client.property.async_get_property_details()
+            _LOGGER.info(first_property_details)
             #
-            # Get Sonic Device Details by Sonic ID
-            # property_details_by_id = await client.property.async_get_property_details_by_id(demo_property_id)
-            # _LOGGER.info(property_details_by_id)
+            # Get Property Details by Property ID
+            property_details_by_id = await client.property.async_get_property_details_by_id(demo_property_id)
+            _LOGGER.info(property_details_by_id)
+
+            # Get Property Notification Settings by Property ID
+            property_notification_settings_by_id = await client.property.async_get_property_notification_settings(demo_property_id)
+            _LOGGER.info(property_notification_settings_by_id)
+
+            # Get Property Settings by Property ID
+            property_settings_by_id = await client.property.async_get_property_settings(demo_property_id)
+            _LOGGER.info(property_settings_by_id)
 
         except HeroLabsError as err:
             _LOGGER.error("There was an error: %s", err)
