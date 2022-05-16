@@ -1,5 +1,3 @@
-# code to be refactored - sonic
-
 """Define an API endpoint manager for Sonic data & actions."""
 from __future__ import annotations
 
@@ -17,7 +15,7 @@ class Sonic:
         """Initialize."""
         self._async_request: Callable[..., Awaitable] = async_request
 
-        self._sonic_total_sonics: Optional[int] = None
+        self._total_sonic_devices: Optional[int] = None
         self._first_sonic_id: Optional[str] = None
 
         self._sonic_name: Optional[str] = None
@@ -58,9 +56,9 @@ class Sonic:
         """Return the list of sonic devices."""
         data = await self._async_request("get", LIST_SONICS_RESOURCE)
         # Should insert additional check here in case the number of sonic device has increased since last polling
-        if not self._sonic_total_sonics:
-            self._sonic_total_sonics = data["total_entries"]
-            assert self._sonic_total_sonics
+        if not self._total_sonic_devices:
+            self._total_sonic_devices = data["total_entries"]
+            assert self._total_sonic_devices
         if not self._first_sonic_id:
             self._first_sonic_id = data["data"][0]["id"]
             assert self._first_sonic_id
@@ -70,16 +68,16 @@ class Sonic:
         if self._first_sonic_status is not None:
             self._first_sonic_status = data["data"][0]["status"]
             assert self._first_sonic_status
-        if not self._first_sonic_valve_state:
-            self._first_sonic_valve_state = data["data"][0]["valve_state"]
-            assert self._first_sonic_valve_state
-            self._first_sonic_auto_shutoff_enabled = data["data"][0]["auto_shut_off_enabled"]
-            self._first_sonic_auto_shutoff_time_limit = data["data"][0]["auto_shut_off_time_limit"]
-            self._first_sonic_auto_shutoff_volume_limit = data["data"][0]["auto_shut_off_volume_limit"]
-            self._first_sonic_battery_level = data["data"][0]["battery"]
-            self._first_sonic_radio_connection = data["data"][0]["radio_connection"]
-            self._first_sonic_radio_rssi = data["data"][0]["radio_rssi"]
+        self._first_sonic_valve_state = data["data"][0]["valve_state"]
+        self._first_sonic_auto_shutoff_enabled = data["data"][0]["auto_shut_off_enabled"]
+        self._first_sonic_auto_shutoff_time_limit = data["data"][0]["auto_shut_off_time_limit"]
+        self._first_sonic_auto_shutoff_volume_limit = data["data"][0]["auto_shut_off_volume_limit"]
+        self._first_sonic_battery_level = data["data"][0]["battery"]
+        self._first_sonic_radio_connection = data["data"][0]["radio_connection"]
+        self._first_sonic_radio_rssi = data["data"][0]["radio_rssi"]
+        if self._first_sonic_serial_no is not None:
             self._first_sonic_serial_no = data["data"][0]["serial_no"]
+            assert self._first_sonic_serial_no
         return data
 
     async def async_get_sonic_wifi(self) -> dict:
@@ -97,9 +95,6 @@ class Sonic:
         if self._sonic_status is not None:
             self._sonic_status = data["status"]
             assert self._sonic_status
-        # if not self._sonic_valve_state:
-        #     self._sonic_valve_state = data["valve_state"]
-        #     assert self._sonic_valve_state
         self._sonic_valve_state = data["valve_state"]
         self._sonic_auto_shutoff_enabled = data["auto_shut_off_enabled"]
         self._sonic_auto_shutoff_time_limit = data["auto_shut_off_time_limit"]
@@ -156,7 +151,7 @@ class Sonic:
         # Valve action endpoint does function but does not return any json response, so we must catch
         # it to avoid it raising an alternative ContentTypeError (it does return a valid 200 status code),
         # see ContentTypeError in Client._async_request function.
-        # Currently I am repeating a check for current status to watch as it opens or closes
+        # Currently, I am repeating a check for current status to watch as it opens or closes
         # but will amend in the future to another cleaner loop.
         await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
         await self.async_get_sonic_by_sonic_id(sonic_id)  # get updated data on sonic status

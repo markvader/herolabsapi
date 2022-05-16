@@ -12,6 +12,7 @@ config.read('config.ini')
 herolabs_email = config['DEFAULT']['EMAIL']
 herolabs_password = config['DEFAULT']['PASSWORD']
 demo_sonic_id = config['DEMO_DATA']['SONIC_ID_SAMPLE']
+demo_property_id = config['DEMO_DATA']['PROPERTY_ID_SAMPLE']
 
 
 async def main() -> None:
@@ -32,7 +33,8 @@ async def main() -> None:
             # _LOGGER.info(sonic_wifi_details)
             #
             # Get Sonic Device Details by Sonic ID
-
+            # sonic_details_by_id = await client.sonic.async_get_sonic_by_sonic_id(demo_sonic_id)
+            # _LOGGER.info(sonic_details_by_id)
             #
             # Update Sonic Device Details by Sonic ID
             # update_sonic_details_by_id = await client.sonic.async_update_sonic_by_sonic_id(
@@ -74,9 +76,21 @@ async def main() -> None:
             # _LOGGER.info(valve_control)
 
             # Control First Sonic Valve
-            valve_control = await client.sonic.async_first_sonic_valve_control("close")
-            # valve_control = await client.sonic.async_first_sonic_valve_control("open")
-            _LOGGER.info(valve_control)
+            # valve_control = await client.sonic.async_first_sonic_valve_control("close")
+            # # valve_control = await client.sonic.async_first_sonic_valve_control("open")
+            # _LOGGER.info(valve_control)
+
+            # Property Calls
+            # Get Property/Properties Details
+            total_properties = await client.property.async_get_total_properties()
+            _LOGGER.info(total_properties)
+            # Get Property/Properties Details
+            # property_details = await client.property.async_get_property_details()
+            # _LOGGER.info(property_details)
+            #
+            # Get Sonic Device Details by Sonic ID
+            # property_details_by_id = await client.property.async_get_property_details_by_id(demo_property_id)
+            # _LOGGER.info(property_details_by_id)
 
         except HeroLabsError as err:
             _LOGGER.error("There was an error: %s", err)

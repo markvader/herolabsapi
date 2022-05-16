@@ -8,6 +8,7 @@ from errors import InvalidCredentialsError, raise_client_error
 from const import BASE_RESOURCE, AUTH_RESOURCE, REFRESH_TOKEN_RESOURCE, SIGN_OUT_RESOURCE
 from user import User
 from sonic import Sonic
+from properties import Properties
 from datetime import datetime, timedelta
 
 LOGGER = logging.getLogger(__package__)
@@ -35,6 +36,7 @@ class Client:
         self._request_retry_delay = request_retry_delay
         self._session = session
         self.sonic = Sonic(self._async_request)
+        self.property = Properties(self._async_request)
 
         # Intended to be populated by async_authenticate():
         self._token: str | None = None

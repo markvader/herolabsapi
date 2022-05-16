@@ -10,7 +10,7 @@ SIGN_OUT_RESOURCE: str = "user-service/auth/sign_out"
 UPDATE_USER_RESOURCE: str = "customer_app/users/"  # +USER_ID
 RESET_PASSWORD_RESOURCE: str = "iot-core-public/passwords/reset_password"
 # property resource endpoints
-LIST_PROPERTIES_RESOURCE: str = "ape/v1/properties"
+LIST_PROPERTIES_RESOURCE: str = "ape/v1/properties/"
 FETCH_NOTIFICATION_SETTINGS_RESOURCE: str = "ape/v1/properties/"  # +PROPERTY_ID+"/notifications"
 FETCH_PROPERTY_SETTINGS_RESOURCE: str = "ape/v1/properties/"  # +PROPERTY_ID+"/settings"
 # signals resource endpoints
