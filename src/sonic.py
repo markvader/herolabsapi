@@ -97,16 +97,19 @@ class Sonic:
         if self._sonic_status is not None:
             self._sonic_status = data["status"]
             assert self._sonic_status
-        if not self._sonic_valve_state:
-            self._sonic_valve_state = data["valve_state"]
-            assert self._sonic_valve_state
-            self._sonic_auto_shutoff_enabled = data["auto_shut_off_enabled"]
-            self._sonic_auto_shutoff_time_limit = data["auto_shut_off_time_limit"]
-            self._sonic_auto_shutoff_volume_limit = data["auto_shut_off_volume_limit"]
-            self._sonic_battery_level = data["battery"]
-            self._sonic_radio_connection = data["radio_connection"]
-            self._sonic_radio_rssi = data["radio_rssi"]
+        # if not self._sonic_valve_state:
+        #     self._sonic_valve_state = data["valve_state"]
+        #     assert self._sonic_valve_state
+        self._sonic_valve_state = data["valve_state"]
+        self._sonic_auto_shutoff_enabled = data["auto_shut_off_enabled"]
+        self._sonic_auto_shutoff_time_limit = data["auto_shut_off_time_limit"]
+        self._sonic_auto_shutoff_volume_limit = data["auto_shut_off_volume_limit"]
+        self._sonic_battery_level = data["battery"]
+        self._sonic_radio_connection = data["radio_connection"]
+        self._sonic_radio_rssi = data["radio_rssi"]
+        if self._sonic_serial_no is not None:
             self._sonic_serial_no = data["serial_no"]
+            assert self._sonic_serial_no
         return data
 
     async def async_update_sonic_by_sonic_id(self, sonic_id: str, sonic_name: str) -> None:
@@ -139,7 +142,8 @@ class Sonic:
         sonic_id_url = f"{LIST_TELEMETRY_RESOURCE}{self._first_sonic_id}/telemetry"
         data = await self._async_request("get", sonic_id_url)
         self._first_sonic_telemetry_probe_time_timestamp = data["probed_at"]
-        self._first_sonic_telemetry_probe_time_datetime = datetime.fromtimestamp(self._first_sonic_telemetry_probe_time_timestamp)
+        self._first_sonic_telemetry_probe_time_datetime = \
+            datetime.fromtimestamp(self._first_sonic_telemetry_probe_time_timestamp)
         self._first_sonic_telemetry_pressure = data["pressure"]  # pressure is reported as millibar e.g 4914 = 4.914 bar
         self._first_sonic_telemetry_water_flow = data["water_flow"]
         self._first_sonic_telemetry_water_temp = data["water_temp"]
@@ -148,14 +152,69 @@ class Sonic:
     async def async_sonic_valve_control_by_id(self, sonic_id: str, valve_action: str) -> None:
         """Open / Close Valve by calling a specified sonic_id. valve_action options are "open" or "close" """
         sonic_id_url = f"{LIST_TELEMETRY_RESOURCE}{sonic_id}/valve"
-        print("current state: "+self._sonic_valve_state)
-        print("valve will now: " + valve_action)
         await self._async_request("put", sonic_id_url, json={"action": f"{valve_action}"})
-        # Valve action does change as instructed but _async_request fails here and reports Invalid credentials.
-        # Have tested this endpoint call independently and no content is returned but status 200 is received.
-        await asyncio.sleep(10) # wait x seconds and get sonic status and display it
-        self.async_get_sonic_by_sonic_id(sonic_id)
-        print(self._sonic_valve_state)
+        # Valve action endpoint does function but does not return any json response, so we must catch
+        # it to avoid it raising an alternative ContentTypeError (it does return a valid 200 status code),
+        # see ContentTypeError in Client._async_request function.
+        # Currently I am repeating a check for current status to watch as it opens or closes
+        # but will amend in the future to another cleaner loop.
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
         return
 
-
+    async def async_first_sonic_valve_control(self, valve_action: str) -> None:
+        """Open / Close First Listed Sonic Valve. valve_action options are "open" or "close" """
+        sonic_id_url = f"{LIST_TELEMETRY_RESOURCE}{self._first_sonic_id}/valve"
+        await self._async_request("put", sonic_id_url, json={"action": f"{valve_action}"})
+        # Valve action endpoint does function but does not return any json response, so we must catch
+        # it to avoid it raising an alternative ContentTypeError (it does return a valid 200 status code),
+        # see ContentTypeError in Client._async_request function.
+        # Currently, I am repeating a check for current status to watch as it opens or closes
+        # but will amend in the future to another cleaner loop.
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(self._first_sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(self._first_sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(self._first_sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(self._first_sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(self._first_sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(self._first_sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(self._first_sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
+        await self.async_get_sonic_by_sonic_id(self._first_sonic_id)  # get updated data on sonic status
+        print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
+        return

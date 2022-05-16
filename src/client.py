@@ -110,9 +110,18 @@ class Client:
             async with session.request(method, url, **kwargs) as resp:
                 try:
                     data = await resp.json()
+                    # print(resp.status)
+                    # await print(resp.json())
+                    # print(resp.headers)
+                    # await print(resp.text())
                 except ContentTypeError:
                     # A ContentTypeError is assumed to be a credentials issue (since the
-                    # API returns NGINX's default BasicAuth HTML upon 403):
+                    # API returns NGINX's default BasicAuth HTML upon 403),
+                    # however in this case the valve control endpoint does not return any json response so we must catch
+                    # it to avoid it raising an alternative ContentTypeError (it does return a valid 200 status code:
+                    if "/valve" in endpoint:
+                        print("Valve control initiated, this should action within one minute")
+                        break
                     if endpoint == AUTH_RESOURCE:
                         # If we are seeing this error upon login, we assume the
                         # email/password are bad:
@@ -171,6 +180,7 @@ class Client:
             ),
         )
         self._token = token_resp["token_details"]
+        # print(self._token)
         # self._token_expiration = datetime.now() + timedelta(days=10)  # I am expiring the token after 10 days
         # self._token_renewal_time = self._auth_token_expiration - timedelta(days=3)  # token refreshes after 7 days
 
