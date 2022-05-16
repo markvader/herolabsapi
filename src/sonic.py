@@ -182,10 +182,12 @@ class Sonic:
         await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
         await self.async_get_sonic_by_sonic_id(sonic_id)  # get updated data on sonic status
         print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
-        return
+        return self._sonic_valve_state
 
     async def async_first_sonic_valve_control(self, valve_action: str) -> None:
         """Open / Close First Listed Sonic Valve. valve_action options are "open" or "close" """
+        if self._first_sonic_id is None:
+            await self.async_get_sonic_details()
         sonic_id_url = f"{LIST_TELEMETRY_RESOURCE}{self._first_sonic_id}/valve"
         await self._async_request("put", sonic_id_url, json={"action": f"{valve_action}"})
         # Valve action endpoint does function but does not return any json response, so we must catch
@@ -217,4 +219,4 @@ class Sonic:
         await asyncio.sleep(10)  # wait x seconds and then get sonic status and display it
         await self.async_get_sonic_by_sonic_id(self._first_sonic_id)  # get updated data on sonic status
         print(datetime.now(), " valve state is now: " + self._sonic_valve_state)
-        return
+        return self._sonic_valve_state

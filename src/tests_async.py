@@ -24,8 +24,8 @@ async def main() -> None:
             # _LOGGER.info(user_details)
 
             # Get Sonic(s) Device Details
-            sonic_details = await client.sonic.async_get_sonic_details()
-            _LOGGER.info(sonic_details)
+            # sonic_details = await client.sonic.async_get_sonic_details()
+            # _LOGGER.info(sonic_details)
             #
             # Get Sonic Wi-fi Details
             # sonic_wifi_details = await client.sonic.async_get_sonic_wifi()
@@ -77,7 +77,6 @@ async def main() -> None:
             valve_control = await client.sonic.async_first_sonic_valve_control("close")
             # valve_control = await client.sonic.async_first_sonic_valve_control("open")
             _LOGGER.info(valve_control)
-
 
         except HeroLabsError as err:
             _LOGGER.error("There was an error: %s", err)
