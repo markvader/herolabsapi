@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import asyncio
-import json
 from datetime import datetime
 from typing import Awaitable, Callable, Optional
 from const import LIST_SONICS_RESOURCE, LIST_SONICS_WIFI_RESOURCE, LIST_TELEMETRY_RESOURCE
@@ -52,6 +51,12 @@ class Sonic:
         self._first_sonic_telemetry_water_flow: Optional[float] = None
         self._first_sonic_telemetry_water_temp: Optional[float] = None
 
+    async def async_get_total_sonics(self) -> str:
+        """Return the number of sonic devices."""
+        data = await self._async_request("get", LIST_SONICS_RESOURCE)
+        self._total_sonic_devices = data["total_entries"]
+        return f"Total Sonic Devices = {self._total_sonic_devices}"
+
     async def async_get_sonic_details(self) -> dict:
         """Return the list of sonic devices."""
         data = await self._async_request("get", LIST_SONICS_RESOURCE)
@@ -80,11 +85,6 @@ class Sonic:
             assert self._first_sonic_serial_no
         return data
 
-    async def async_get_sonic_wifi(self) -> dict:
-        """Should return the sonic wi-fi info, valid response received but no device data returned."""
-        data = await self._async_request("get", LIST_SONICS_WIFI_RESOURCE)
-        return data
-
     async def async_get_sonic_by_sonic_id(self, sonic_id: str) -> dict:
         """this sends a request to get the details of a specified sonic device"""
         sonic_id_url = f"{LIST_SONICS_RESOURCE}{sonic_id}"
@@ -105,6 +105,11 @@ class Sonic:
         if self._sonic_serial_no is not None:
             self._sonic_serial_no = data["serial_no"]
             assert self._sonic_serial_no
+        return data
+
+    async def async_get_sonic_wifi(self) -> dict:
+        """Should return the sonic wi-fi info, valid response received but no device data returned."""
+        data = await self._async_request("get", LIST_SONICS_WIFI_RESOURCE)
         return data
 
     async def async_update_sonic_by_sonic_id(self, sonic_id: str, sonic_name: str) -> None:

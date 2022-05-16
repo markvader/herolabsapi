@@ -1,15 +1,18 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 
-from aiohttp import BasicAuth, ClientSession, ClientTimeout
+from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError, ContentTypeError
-from typing import Any, TypedDict, cast, Optional
+from typing import Any, cast, Optional
 from errors import InvalidCredentialsError, raise_client_error
 from const import BASE_RESOURCE, AUTH_RESOURCE, REFRESH_TOKEN_RESOURCE, SIGN_OUT_RESOURCE
 from user import User
 from sonic import Sonic
+from signals import Signals
 from properties import Properties
-from datetime import datetime, timedelta
+from datetime import datetime
 
 LOGGER = logging.getLogger(__package__)
 
@@ -37,6 +40,7 @@ class Client:
         self._session = session
         self.sonic = Sonic(self._async_request)
         self.property = Properties(self._async_request)
+        self.signal = Signals(self._async_request)
 
         # Intended to be populated by async_authenticate():
         self._token: str | None = None
@@ -117,16 +121,17 @@ class Client:
                     # await print(resp.json())
                     # await print(resp.text())
                 except ContentTypeError:
-                    # A ContentTypeError is assumed to be a credentials issue (since the
-                    # API returns NGINX's default BasicAuth HTML upon 403),
-                    # however in this case the valve control endpoint does not return any json response so we must catch
-                    # it to avoid it raising an alternative ContentTypeError (it does return a valid 200 status code:
+                    # A ContentTypeError is assumed to be a credentials issue except in the case of the valve control
+                    # & invalidate token endpoints which do not return any json response, so we must catch here
+                    # to avoid it raising an alternative ContentTypeError
+                    # both do return valid 200 status codes and function as intended.
                     if "/valve" in endpoint:
                         print("Valve control initiated, this should action within one minute")
                         break
+                    if endpoint == SIGN_OUT_RESOURCE:
+                        break
                     if endpoint == AUTH_RESOURCE:
-                        # If we are seeing this error upon login, we assume the
-                        # email/password are bad:
+                        # If we are seeing this error upon login, we assume the email/password are bad:
                         raise InvalidCredentialsError("Invalid credentials") from None
 
                     # ...otherwise, we assume the token has expired, so we make a few
@@ -182,7 +187,6 @@ class Client:
             ),
         )
         self._token = token_resp["token_details"]
-        # print(self._token)
         # self._token_expiration = datetime.now() + timedelta(days=10)  # I am expiring the token after 10 days
         # self._token_renewal_time = self._auth_token_expiration - timedelta(days=3)  # token refreshes after 7 days
 
@@ -191,12 +195,12 @@ class Client:
             assert self._user_id
             self.user = User(self._async_request, self._user_id)
 
-    async def invalidate_token(self) -> None:
+    async def invalidate_token(self):
         """Invalidate current token."""
-        data = await self._async_request("delete", SIGN_OUT_RESOURCE)
-        return data
+        await self._async_request("delete", SIGN_OUT_RESOURCE)
+        return print("Your current API authentication token has now been invalidated")
 
-    async def refresh_token(self) -> None:
+    async def refresh_token(self):
         """Refresh current token."""
-        data = await self._async_request("put", REFRESH_TOKEN_RESOURCE)
-        return data
+        await self._async_request("put", REFRESH_TOKEN_RESOURCE)
+        return print("Your current API authentication token has now been refreshed")

@@ -1,63 +1,110 @@
-# code to be refactored - signals
+""""Define an API endpoint manager for Properties data & actions."""
+from __future__ import annotations
 
-#
-# def _retrieve_signals(self) -> None:
-#     self._check_token()
-#     """A signal object is a representation of a Signal device (sometimes called hub)
-#      that communicates with Wi-Fi and Sonic (a valve installed on a pipe)."""
-#     response = requests.get(
-#         const.LIST_SIGNALS_RESOURCE,
-#         headers=self._authenticated_headers()
-#     )
-#     response_data = response.json()
-#     print("retrieve_signals: ", response.text)
-#     self._signal_total_signals = response_data["total_entries"]
-#     # For now, I am only storing the first signal device
-#     self._signal_id = response_data["data"][0]["id"]
-#     self._signal_boot_time_timestamp = response_data["data"][0]["boot_time"]
-#     self._signal_boot_time_datetime = datetime.fromtimestamp(self._signal_boot_time_timestamp)
-#     self._signal_cloud_connection = response_data["data"][0]["cloud_connection"]
-#     # self._signal_modem_boot_time_timestamp = response_data["data"][0]["modem_boot_time"]
-#     # # _signal_modem_boot_time_timestamp returns 0 value
-#     # self._signal_modem_boot_time_datetime = datetime.fromtimestamp(self._signal_modem_boot_time_timestamp)
-#     self._signal_modem_version = response_data["data"][0]["modem_version"]
-#     self._signal_name = response_data["data"][0]["name"]
-#     self._signal_serial_no = response_data["data"][0]["serial_no"]
-#     self._signal_version = response_data["data"][0]["version"]
-#     self._signal_wifi_rssi = response_data["data"][0]["wifi_rssi"]
-#
-# def _retrieve_signal_by_id(self, signal_id: str) -> None:
-#     """this sends a request to get the details of a specified signal device"""
-#     self._check_token()
-#     signal_id_url = const.LIST_SIGNALS_RESOURCE + "/" + signal_id
-#     response = requests.get(
-#         signal_id_url,
-#         headers=self._authenticated_headers()
-#     )
-#     print("retrieve signal data by id: ", response.text)
+from datetime import datetime
+from typing import Awaitable, Callable, Optional
+from const import LIST_SIGNALS_RESOURCE, FETCH_PROPERTY_SETTINGS_RESOURCE, FETCH_NOTIFICATION_SETTINGS_RESOURCE
 
 
-# def _signals_by_property_id(self, property_id: str) -> None:
-#     """this sends a request to get the signals of a specified property"""
-#     self._check_token()
-#     property_signals_url = const.FETCH_PROPERTY_SETTINGS_RESOURCE + property_id + "/signals"
-#     response = requests.get(
-#         property_signals_url,
-#         headers=self._authenticated_headers(),
-#     )
-#     print("signals by specified property id: ", response.text)
+class Signals:
+    """Define the signal manager object.
+    A signal object is a representation of a Signal device (sometimes called hub)
+     that communicates with Wi-Fi and Sonic (a valve installed on a pipe)."""
 
-#
-# def _update_signal(self, signal_id: str, signal_name: str) -> None:
-#     self._check_token()
-#     """this sends a request to updated the name of the specified signal device
-#     name is the only value that can be updated at this endpoint"""
-#     update_signal_address = const.LIST_SIGNALS_RESOURCE + "/" + signal_id
-#     response = requests.put(
-#         update_signal_address,
-#         headers=self._authenticated_headers(),
-#         json={
-#             "name": f"{signal_name}",
-#         }
-#     )
-#     print("Signal Name Updated: ", response.text)
+    def __init__(self, async_request: Callable[..., Awaitable]) -> None:
+        """Initialize."""
+        self._async_request: Callable[..., Awaitable] = async_request
+
+        self._total_signals: Optional[int] = None
+        self._signal_id: Optional[str] = None
+        self._signal_boot_time_timestamp: Optional[int] = None
+        self._signal_boot_time_datetime: Optional[datetime.datetime] = None
+        self._signal_cloud_connection: Optional[str] = None
+        self._signal_modem_boot_time_timestamp: Optional[int] = None
+        self._signal_modem_boot_time_datetime: Optional[datetime.datetime] = None
+        self._signal_modem_version: Optional[str] = None
+        self._signal_name: Optional[str] = None
+        self._signal_serial_no: Optional[str] = None
+        self._signal_version: Optional[str] = None
+        self._signal_wifi_rssi: Optional[int] = None
+
+        self._first_signal_id: Optional[str] = None
+        self._first_signal_boot_time_timestamp: Optional[int] = None
+        self._first_signal_boot_time_datetime: Optional[datetime.datetime] = None
+        self._first_signal_cloud_connection: Optional[str] = None
+        self._first_signal_modem_boot_time_timestamp: Optional[int] = None
+        self._first_signal_modem_boot_time_datetime: Optional[datetime.datetime] = None
+        self._first_signal_modem_version: Optional[str] = None
+        self._first_signal_name: Optional[str] = None
+        self._first_signal_serial_no: Optional[str] = None
+        self._first_signal_version: Optional[str] = None
+        self._first_signal_wifi_rssi: Optional[int] = None
+
+    async def async_get_total_signals(self) -> str:
+        """Return the number of signals."""
+        data = await self._async_request("get", LIST_SIGNALS_RESOURCE)
+        self._total_signals = data["total_entries"]
+        return f"Total Signal Devices = {self._total_signals}"
+
+    async def async_get_signal_details(self) -> dict:
+        """Return the list of Signal devices."""
+        data = await self._async_request("get", LIST_SIGNALS_RESOURCE)
+        # Should insert additional check here in case the number of signal device has increased since last polling
+        # storing only first signal object currently
+        if not self._total_signals:
+            self._total_signals = data["total_entries"]
+            assert self._total_signals
+        self._first_signal_id = data["data"][0]["id"]
+        self._first_signal_boot_time_timestamp = data["data"][0]["boot_time"]
+        self._first_signal_boot_time_datetime = datetime.fromtimestamp(self._first_signal_boot_time_timestamp)
+        self._first_signal_cloud_connection = data["data"][0]["cloud_connection"]
+        self._first_signal_modem_boot_time_timestamp = data["data"][0]["modem_boot_time"]
+        self._first_signal_modem_boot_time_datetime = datetime.fromtimestamp(self._first_signal_modem_boot_time_timestamp)
+        self._first_signal_modem_version = data["data"][0]["modem_version"]
+        self._first_signal_name = data["data"][0]["name"]
+        self._first_signal_serial_no = data["data"][0]["serial_no"]
+        self._first_signal_version = data["data"][0]["version"]
+        self._first_signal_wifi_rssi = data["data"][0]["wifi_rssi"]
+        return data
+
+    async def async_get_signal_details_by_id(self, signal_id: str) -> dict:
+        """this sends a request to get the details of a specified signal device"""
+        signal_id_url = f"{LIST_SIGNALS_RESOURCE}{signal_id}"
+        data = await self._async_request("get", signal_id_url)
+        self._signal_id = data["id"]
+        self._signal_boot_time_timestamp = data["boot_time"]
+        self._signal_boot_time_datetime = datetime.fromtimestamp(self._signal_boot_time_timestamp)
+        self._signal_cloud_connection = data["cloud_connection"]
+        self._signal_modem_boot_time_timestamp = data["modem_boot_time"]
+        self._signal_modem_boot_time_datetime = datetime.fromtimestamp(self._signal_modem_boot_time_timestamp)
+        self._signal_modem_version = data["modem_version"]
+        self._signal_name = data["name"]
+        self._signal_serial_no = data["serial_no"]
+        self._signal_version = data["version"]
+        self._signal_wifi_rssi = data["wifi_rssi"]
+        return data
+
+    async def async_get_signal_details_by_property_id(self, property_id: str) -> dict:
+        """this sends a request to get the details of signal devices registered to a specified property"""
+        property_signals_url = f"{FETCH_PROPERTY_SETTINGS_RESOURCE}{property_id}/signals"
+        data = await self._async_request("get", property_signals_url)
+        self._signal_id = data["id"]
+        self._signal_boot_time_timestamp = data["boot_time"]
+        self._signal_boot_time_datetime = datetime.fromtimestamp(self._signal_boot_time_timestamp)
+        self._signal_cloud_connection = data["cloud_connection"]
+        self._signal_modem_boot_time_timestamp = data["modem_boot_time"]
+        self._signal_modem_boot_time_datetime = datetime.fromtimestamp(self._signal_modem_boot_time_timestamp)
+        self._signal_modem_version = data["modem_version"]
+        self._signal_name = data["name"]
+        self._signal_serial_no = data["serial_no"]
+        self._signal_version = data["version"]
+        self._signal_wifi_rssi = data["wifi_rssi"]
+        return data
+
+    async def async_update_signal_details(self, signal_id: str, signal_name: str) -> dict:
+        """this sends a request to update the name of the specified signal device
+        name is the only value that can be updated at this endpoint"""
+        signal_id_url = f"{LIST_SIGNALS_RESOURCE}{signal_id}"
+        data = await self._async_request("put", signal_id_url, json={"name": f"{signal_name}"})
+        self._signal_name = data["name"]
+        return data

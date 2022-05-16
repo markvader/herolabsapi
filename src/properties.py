@@ -1,9 +1,6 @@
 """"Define an API endpoint manager for Properties data & actions."""
 from __future__ import annotations
 
-import asyncio
-import json
-from datetime import datetime
 from typing import Awaitable, Callable, Optional
 from const import LIST_PROPERTIES_RESOURCE, FETCH_PROPERTY_SETTINGS_RESOURCE, FETCH_NOTIFICATION_SETTINGS_RESOURCE
 
@@ -59,11 +56,11 @@ class Properties:
         self._property_settings_pressure_tests_enabled: Optional[bool] = None
         self._property_settings_auto_shut_off: Optional[bool] = None
 
-    async def async_get_total_properties(self) -> dict:
+    async def async_get_total_properties(self) -> str:
         """Return the number of properties."""
         data = await self._async_request("get", LIST_PROPERTIES_RESOURCE)
         self._total_properties = data["total_entries"]
-        return self._total_properties
+        return f"Total Properties = {self._total_properties}"
 
     async def async_get_property_details(self) -> dict:
         """Return the list of properties."""
@@ -119,7 +116,7 @@ class Properties:
 
     async def async_get_property_settings(self, property_id: str) -> dict:
         """Part of the property object is settings where a user can configure timezone, webhook etc."""
-        property_id_url = f"{FETCH_NOTIFICATION_SETTINGS_RESOURCE}{property_id}/settings"
+        property_id_url = f"{FETCH_PROPERTY_SETTINGS_RESOURCE}{property_id}/settings"
         data = await self._async_request("get", property_id_url)
         self._property_settings_auto_shut_off = data["auto_shut_off"]
         self._property_settings_pressure_tests_enabled = data["pressure_tests_enabled"]
@@ -129,25 +126,17 @@ class Properties:
         self._property_settings_webhook_url = data["webhook_url"]
         return data
 
-
-
-    #
-    # def _update_property(self, property_id: str, **kwargs) -> None:
-    #     self._check_token()
-    #     """The key/values pairs that can be updated are:
-    #     active	(boolean) - Whether the property is active or not
-    #     address (string) - Property address
-    #     city (string) - Property city
-    #     country (string) - Property country
-    #     lat	(number) - Property latitude
-    #     lng	(number) - Property longitude
-    #     name (string) - Property name
-    #     postcode (string) - Property postcode
-    #     uprn (string) - Property uprn"""
-    #     update_property_address = const.LIST_PROPERTIES_RESOURCE + "/" + property_id
-    #     response = requests.put(
-    #         update_property_address,
-    #         headers=self._authenticated_headers(),
-    #         **kwargs
-    #     )
-    #     print("Property Details Updated: ", response.text)
+    async def async_update_property_details(self, property_id: str, **kwargs) -> None:
+        """The key/values pairs that can be updated are:
+        active	(boolean) - Whether the property is active or not
+        address (string) - Property address
+        city (string) - Property city
+        country (string) - Property country
+        lat	(number) - Property latitude
+        lng	(number) - Property longitude
+        name (string) - Property name
+        postcode (string) - Property postcode
+        uprn (string) - Property uprn"""
+        property_id_url = f"{LIST_PROPERTIES_RESOURCE}{property_id}"
+        data = await self._async_request("put", property_id_url, **kwargs)
+        return data

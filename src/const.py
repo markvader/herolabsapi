@@ -14,7 +14,7 @@ LIST_PROPERTIES_RESOURCE: str = "ape/v1/properties/"
 FETCH_NOTIFICATION_SETTINGS_RESOURCE: str = "ape/v1/properties/"  # +PROPERTY_ID+"/notifications"
 FETCH_PROPERTY_SETTINGS_RESOURCE: str = "ape/v1/properties/"  # +PROPERTY_ID+"/settings"
 # signals resource endpoints
-LIST_SIGNALS_RESOURCE: str = "ape/v1/signals"
+LIST_SIGNALS_RESOURCE: str = "ape/v1/signals/"
 # sonics resource endpoints
 LIST_SONICS_RESOURCE: str = "ape/v1/sonics/"
 LIST_SONICS_WIFI_RESOURCE: str = "ape/v1/sonics_wifi"
