@@ -7,7 +7,6 @@ Methods / functions
     - put /ape/v1/properties/{property_id}/notifications - no documentation on what fields can be updated via API.
     - put /ape/v1/properties/{property_id}/settings - no documentation on what fields can be updated via API.
     - put /ape/v1/sonics_wifi/{id}
-- appropriate returns
 - hide/remove unnecessary print statements
 
 OTHERS
@@ -17,9 +16,6 @@ OTHERS
 README
 - fix markdown in readme (formatting for / in table doesn't display in PYPI, need to encode it?)
 - re-write readme
-
-In Progress:
-- home assistant integration
 
 later:
 - appropriate handling for users with multiple sonics, signals or properties, at the minute only first devices returned are utilised

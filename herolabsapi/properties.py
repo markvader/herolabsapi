@@ -3,10 +3,7 @@ from __future__ import annotations
 
 from typing import Awaitable, Callable, Optional
 
-from herolabsapi.const import (
-    LIST_PROPERTIES_RESOURCE,
-    FETCH_PROPERTY_SETTINGS_RESOURCE,
-    FETCH_NOTIFICATION_SETTINGS_RESOURCE,)
+from herolabsapi import PROPERTIES_RESOURCE
 
 
 class Properties:
@@ -62,13 +59,13 @@ class Properties:
 
     async def async_get_total_properties(self) -> str:
         """Return the number of properties."""
-        data = await self._async_request("get", LIST_PROPERTIES_RESOURCE)
+        data = await self._async_request("get", PROPERTIES_RESOURCE)
         self._total_properties = data["total_entries"]
         return f"Total Properties = {self._total_properties}"
 
     async def async_get_property_details(self) -> dict:
         """Return the list of properties."""
-        data = await self._async_request("get", LIST_PROPERTIES_RESOURCE)
+        data = await self._async_request("get", PROPERTIES_RESOURCE)
         # Should insert additional check here in case the number of sonic device has increased since last polling
         # storing only first property object currently
         if not self._total_properties:
@@ -88,7 +85,7 @@ class Properties:
 
     async def async_get_property_details_by_id(self, property_id: str) -> dict:
         """Return the specified property details."""
-        property_id_url = f"{LIST_PROPERTIES_RESOURCE}{property_id}"
+        property_id_url = f"{PROPERTIES_RESOURCE}{property_id}"
         data = await self._async_request("get", property_id_url)
         self._property_id = data["id"]
         self._property_name = data["name"]
@@ -105,7 +102,7 @@ class Properties:
     async def async_get_property_notification_settings(self, property_id: str) -> dict:
         """Part of the property object is notification settings where a user can configure
         what notifications they would like to receive."""
-        property_id_url = f"{FETCH_NOTIFICATION_SETTINGS_RESOURCE}{property_id}/notifications"
+        property_id_url = f"{PROPERTIES_RESOURCE}{property_id}/notifications"
         data = await self._async_request("get", property_id_url)
         self._property_notifications_cloud_disconnection = data["cloud_disconnection"]
         self._property_notifications_device_handle_moved = data["device_handle_moved"]
@@ -120,7 +117,7 @@ class Properties:
 
     async def async_get_property_settings(self, property_id: str) -> dict:
         """Part of the property object is settings where a user can configure timezone, webhook etc."""
-        property_id_url = f"{FETCH_PROPERTY_SETTINGS_RESOURCE}{property_id}/settings"
+        property_id_url = f"{PROPERTIES_RESOURCE}{property_id}/settings"
         data = await self._async_request("get", property_id_url)
         self._property_settings_auto_shut_off = data["auto_shut_off"]
         self._property_settings_pressure_tests_enabled = data["pressure_tests_enabled"]
@@ -141,6 +138,6 @@ class Properties:
         name (string) - Property name
         postcode (string) - Property postcode
         uprn (string) - Property uprn"""
-        property_id_url = f"{LIST_PROPERTIES_RESOURCE}{property_id}"
+        property_id_url = f"{PROPERTIES_RESOURCE}{property_id}"
         data = await self._async_request("put", property_id_url, **kwargs)
         return data

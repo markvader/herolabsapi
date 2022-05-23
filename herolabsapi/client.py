@@ -6,15 +6,16 @@ import logging
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError, ContentTypeError
 from typing import Any, cast, Optional
-from datetime import datetime
 
-from herolabsapi.errors import InvalidCredentialsError, raise_client_error
-from herolabsapi.const import BASE_RESOURCE, AUTH_RESOURCE, REFRESH_TOKEN_RESOURCE, SIGN_OUT_RESOURCE
-from herolabsapi.user import User
-from herolabsapi.sonic import Sonic
-from herolabsapi.signals import Signals
-from herolabsapi.incidents import Incidents
-from herolabsapi.properties import Properties
+from herolabsapi import (
+    BASE_RESOURCE, AUTH_RESOURCE, REFRESH_TOKEN_RESOURCE, SIGN_OUT_RESOURCE,
+    InvalidCredentialsError, raise_client_error,
+    User,
+    Sonic,
+    Signals,
+    Incidents,
+    Properties
+)
 
 LOGGER = logging.getLogger(__package__)
 
@@ -47,8 +48,6 @@ class Client:
 
         # Intended to be populated by async_authenticate():
         self._token: str | None = None
-        self._token_expiration: Optional[datetime] = None  # I am not currently doing anything with this
-        self._token_renewal_time: Optional[datetime] = None  # I am not currently doing anything with this
         self._user_id: str | None = None
 
         # Intended to be populated by async_login():
@@ -70,7 +69,6 @@ class Client:
         request_retries: int = DEFAULT_RETRIES,
     ) -> "Client":
         """Get a fully initialized API client."""
-        # print("Logging In...")
         client = cls(
             session=session,
             logger=logger,
@@ -79,16 +77,14 @@ class Client:
         )
         client._email = email
         client._password = password
-        # print("Passing login data to async method")
         await client.async_authenticate()
-        # print("async_authenticate has returned")
         return client
 
     async def _async_request(
         self, method: str, endpoint: str, **kwargs: dict[str, Any]
     ) -> dict[str, Any] | list[dict[str, Any]]:
         """Make an API request."""
-        url = f"{BASE_RESOURCE}/{endpoint}"
+        url = f"{BASE_RESOURCE}{endpoint}"
 
         kwargs.setdefault("headers", {})
         kwargs["headers"].update(
@@ -127,7 +123,6 @@ class Client:
                     if endpoint == AUTH_RESOURCE:
                         # If we are seeing this error upon login, we assume the email/password are bad:
                         raise InvalidCredentialsError("Invalid credentials") from None
-
                     # ...otherwise, we assume the token has expired, so we make a few
                     # attempts to refresh it and retry the original request:
                     retry += 1
@@ -148,8 +143,7 @@ class Client:
 
                 break
         else:
-            # We only end up here if we continue to have credential issues after
-            # several retries:
+            # We only end up here if we continue to have credential issues after several retries:
             raise InvalidCredentialsError("Invalid credentials") from None
 
         if not use_running_session:
@@ -168,21 +162,15 @@ class Client:
         The default expiration duration should be two weeks (emails exchanged with hero labs developer)
         At my request they will add the token expiry time to the API response"""
 
-        # Invalidate any stored token before calling for new token:
         self._token = None
-        # self._token_expiration = None
-        # self._token_renewal_time = None
         token_resp = cast(
             str,
             await self._async_request(
                 "post", AUTH_RESOURCE,
-                # headers={'Content-Type': 'application/json'},
                 json={'email': self._email, 'password': self._password}
             ),
         )
         self._token = token_resp["token_details"]
-        # self._token_expiration = datetime.now() + timedelta(days=10)  # I am expiring the token after 10 days
-        # self._token_renewal_time = self._auth_token_expiration - timedelta(days=3)  # token refreshes after 7 days
 
         if not self._user_id:
             self._user_id = token_resp["user_details"]["id"]

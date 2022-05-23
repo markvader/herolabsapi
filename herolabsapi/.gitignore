@@ -1,7 +1,7 @@
 # Gitignore settings for Hero Labs API Python Library
 
 # Ignored files
-config.ini
+../examples/config.ini
 
 
 # Ignored Folders

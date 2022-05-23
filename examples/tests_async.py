@@ -1,10 +1,11 @@
+"""Run an example script to quickly test."""
+
 import asyncio
 import logging
 import configparser
 from aiohttp import ClientSession
 
-from herolabsapi.client import Client
-from herolabsapi.errors import HeroLabsError
+from herolabsapi import Client, HeroLabsError
 
 _LOGGER = logging.getLogger()
 
@@ -57,16 +58,16 @@ async def main() -> None:
             _LOGGER.info(total_sonics)
 
             # Get Sonic(s) Device Details
-            # first_sonic_details = await client.sonic.async_get_sonic_details()
-            # _LOGGER.info(first_sonic_details)
+            first_sonic_details = await client.sonic.async_get_sonic_details()
+            _LOGGER.info(first_sonic_details)
             #
             # Get Sonic Device Details by Sonic ID
             # sonic_details_by_id = await client.sonic.async_get_sonic_by_sonic_id(demo_sonic_id)
             # _LOGGER.info(sonic_details_by_id)
             #
             # Get Sonic Wi-fi Details
-            # sonic_wifi_details = await client.sonic.async_get_sonic_wifi()
-            # _LOGGER.info(sonic_wifi_details)
+            sonic_wifi_details = await client.sonic.async_get_sonic_wifi()
+            _LOGGER.info(sonic_wifi_details)
             #
             # Update Sonic Device Details by Sonic ID
             # update_sonic_details_by_id = await client.sonic.async_update_sonic_by_sonic_id(
@@ -82,8 +83,8 @@ async def main() -> None:
             # _LOGGER.info(sonic_telemetry_by_id)
             #
             # Get First Sonic Telemetry
-            # first_sonic_telemetry = await client.sonic.async_first_sonic_telemetry()
-            # _LOGGER.info(first_sonic_telemetry)
+            first_sonic_telemetry = await client.sonic.async_first_sonic_telemetry()
+            _LOGGER.info(first_sonic_telemetry)
 
             # Control Sonic Valve by ID
             # valve_control = await client.sonic.async_sonic_valve_control_by_id(demo_sonic_id, "close")

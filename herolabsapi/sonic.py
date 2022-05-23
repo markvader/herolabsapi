@@ -5,7 +5,7 @@ import asyncio
 from datetime import datetime
 from typing import Awaitable, Callable, Optional
 
-from herolabsapi.const import LIST_SONICS_RESOURCE, LIST_SONICS_WIFI_RESOURCE, LIST_TELEMETRY_RESOURCE
+from herolabsapi import SONICS_RESOURCE, SONICS_WIFI_RESOURCE
 
 
 class Sonic:
@@ -54,13 +54,13 @@ class Sonic:
 
     async def async_get_total_sonics(self) -> str:
         """Return the number of sonic devices."""
-        data = await self._async_request("get", LIST_SONICS_RESOURCE)
+        data = await self._async_request("get", SONICS_RESOURCE)
         self._total_sonic_devices = data["total_entries"]
         return f"Total Sonic Devices = {self._total_sonic_devices}"
 
     async def async_get_sonic_details(self) -> dict:
         """Return the list of sonic devices."""
-        data = await self._async_request("get", LIST_SONICS_RESOURCE)
+        data = await self._async_request("get", SONICS_RESOURCE)
         # Should insert additional check here in case the number of sonic device has increased since last polling
         if not self._total_sonic_devices:
             self._total_sonic_devices = data["total_entries"]
@@ -88,7 +88,7 @@ class Sonic:
 
     async def async_get_sonic_by_sonic_id(self, sonic_id: str) -> dict:
         """this sends a request to get the details of a specified sonic device"""
-        sonic_id_url = f"{LIST_SONICS_RESOURCE}{sonic_id}"
+        sonic_id_url = f"{SONICS_RESOURCE}{sonic_id}"
         data = await self._async_request("get", sonic_id_url)
         if not self._sonic_name:
             self._sonic_name = data["name"]
@@ -110,12 +110,12 @@ class Sonic:
 
     async def async_get_sonic_wifi(self) -> dict:
         """Should return the sonic wi-fi info, valid response received but no device data returned."""
-        data = await self._async_request("get", LIST_SONICS_WIFI_RESOURCE)
+        data = await self._async_request("get", SONICS_WIFI_RESOURCE)
         return data
 
     async def async_update_sonic_by_sonic_id(self, sonic_id: str, sonic_name: str) -> None:
         """Update the sonic device. Name is the only value that can be updated at this endpoint"""
-        sonic_id_url = f"{LIST_SONICS_RESOURCE}{sonic_id}"
+        sonic_id_url = f"{SONICS_RESOURCE}{sonic_id}"
         data = await self._async_request("put", sonic_id_url, json={"name": f"{sonic_name}"})
         return data
 
@@ -123,13 +123,13 @@ class Sonic:
         """Update the first sonic device. Name is the only value that can be updated at this endpoint"""
         if not self._first_sonic_id:
             await self.async_get_sonic_details()
-        sonic_id_url = f"{LIST_SONICS_RESOURCE}{self._first_sonic_id}"
+        sonic_id_url = f"{SONICS_RESOURCE}{self._first_sonic_id}"
         data = await self._async_request("put", sonic_id_url, json={"name": f"{sonic_name}"})
         return data
 
     async def async_sonic_telemetry_by_id(self, sonic_id: str) -> dict:
         """A telemetry object contains the latest telemetry details from a Sonic such as pressure, temperature etc."""
-        sonic_id_url = f"{LIST_TELEMETRY_RESOURCE}{sonic_id}/telemetry"
+        sonic_id_url = f"{SONICS_RESOURCE}{sonic_id}/telemetry"
         data = await self._async_request("get", sonic_id_url)
         self._sonic_telemetry_probe_time_timestamp = data["probed_at"]
         self._sonic_telemetry_probe_time_datetime = datetime.fromtimestamp(self._sonic_telemetry_probe_time_timestamp)
@@ -140,7 +140,7 @@ class Sonic:
 
     async def async_first_sonic_telemetry(self) -> dict:
         """A telemetry object contains the latest telemetry details from a Sonic such as pressure, temperature etc."""
-        sonic_id_url = f"{LIST_TELEMETRY_RESOURCE}{self._first_sonic_id}/telemetry"
+        sonic_id_url = f"{SONICS_RESOURCE}{self._first_sonic_id}/telemetry"
         data = await self._async_request("get", sonic_id_url)
         self._first_sonic_telemetry_probe_time_timestamp = data["probed_at"]
         self._first_sonic_telemetry_probe_time_datetime = \
@@ -152,7 +152,7 @@ class Sonic:
 
     async def async_sonic_valve_control_by_id(self, sonic_id: str, valve_action: str) -> None:
         """Open / Close Valve by calling a specified sonic_id. valve_action options are "open" or "close" """
-        sonic_id_url = f"{LIST_TELEMETRY_RESOURCE}{sonic_id}/valve"
+        sonic_id_url = f"{SONICS_RESOURCE}{sonic_id}/valve"
         await self._async_request("put", sonic_id_url, json={"action": f"{valve_action}"})
         # Valve action endpoint does function but does not return any json response, so we must catch
         # it to avoid it raising an alternative ContentTypeError (it does return a valid 200 status code),
@@ -189,7 +189,7 @@ class Sonic:
         """Open / Close First Listed Sonic Valve. valve_action options are "open" or "close" """
         if self._first_sonic_id is None:
             await self.async_get_sonic_details()
-        sonic_id_url = f"{LIST_TELEMETRY_RESOURCE}{self._first_sonic_id}/valve"
+        sonic_id_url = f"{SONICS_RESOURCE}{self._first_sonic_id}/valve"
         await self._async_request("put", sonic_id_url, json={"action": f"{valve_action}"})
         # Valve action endpoint does function but does not return any json response, so we must catch
         # it to avoid it raising an alternative ContentTypeError (it does return a valid 200 status code),
