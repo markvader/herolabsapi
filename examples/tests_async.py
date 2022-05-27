@@ -106,7 +106,7 @@ async def main() -> None:
             # _LOGGER.info(first_property_details)
             #
             # Get Property Details by Property ID
-            # property_details_by_id = await client.property.async_get_property_details_by_id(demo_property_id)
+            # property_details_by_id = await client.property.async_get_property_details(demo_property_id)
             # _LOGGER.info(property_details_by_id)
 
             # Get Property Notification Settings by Property ID
