@@ -9,7 +9,7 @@ Written by [@markvader](https://www.github.com/markvader)
 
 [Hero Labs API Swagger UI](https://iot-core.hero-labs.com/ape/v1/swaggerui/)
 
-A list of API endpoints and their functions can be found [here](https://www.github.com/markvader/herolabsapi/api_endpoints.md)
+A list of gathered API endpoints and their functions can be found [here](https://github.com/markvader/herolabsapi/blob/master/api_endpoints.md)
 # Installation
 
 ```
