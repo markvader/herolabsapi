@@ -60,42 +60,43 @@ async def main() -> None:
     print("Total Sonic Devices:", total_sonics)
 
     # Rename Sonic Device
-    await client.sonic.async_update_sonic_name(first_device_id, "New Sonic Name")
+    # await client.sonic.async_update_sonic_name(first_device_id, "New Sonic Name")
 
     # Change Valve State
     # Open the shutoff valve
-    await client.sonic.async_open_sonic_valve(first_device_id)
+    # await client.sonic.async_open_sonic_valve(first_device_id)
     # Close the shutoff valve
-    await client.sonic.async_close_sonic_valve(first_device_id)
+    # await client.sonic.async_close_sonic_valve(first_device_id)
 
     # INCIDENTS API CALLS
     # Get Incidents
     incidents = await client.incidents.async_get_incidents()
-    print(incidents)
+    print("all incidents:", incidents)
 
     # Get Open Incidents
     open_incidents = await client.incidents.async_get_open_incidents()
-    print(open_incidents)
+    print("open incidents:", open_incidents)
 
     # Get Incident Details
     incident_details = await client.incidents.async_get_incident_details(demo_incident_id)
-    print(incident_details)
+    print("details of specific incident:", incident_details)
 
     # Get Incidents by Property ID
     property_incidents = await client.incidents.async_get_incidents_by_property(demo_property_id)
-    print(property_incidents)
+    print("all incidents for a property:", property_incidents)
 
     # Get Open Incidents by Property ID
     property_open_incidents = await client.incidents.async_get_open_incidents_by_property(demo_property_id)
-    print("open incidents for a property", property_open_incidents)
+    print("open incidents for a property:", property_open_incidents)
 
     # Action an Incident
-    close_incident = await client.incidents.async_close_incident(demo_incident_id)
+    # close_incident = await client.incidents.async_close_incident(demo_incident_id)
     # print(close_incident)
-    reopen_incident = await client.incidents.async_close_incident(demo_incident_id)
+    # reopen_incident = await client.incidents.async_close_incident(demo_incident_id)
 
-# There are additional api endpoints that can be explored and called, I will put example code in the examples folder
-
+    # There are additional api endpoints that can be explored and called (properties, signals, user),
+    # I will put example code in the examples folder.
+    
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
