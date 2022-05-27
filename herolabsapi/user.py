@@ -18,8 +18,7 @@ class User:
     async def async_get_user_details(self) -> dict:
         """Return the user details."""
         user_details_url = f"{USER_RESOURCE}{self._user_id}"
-        data = await self._async_request("get", user_details_url)
-        return data
+        return await self._async_request("get", user_details_url)
 
     async def async_update_user_details(self, user_updates_payload: str) -> None:
         """Update the user details.
@@ -28,8 +27,7 @@ class User:
         The updatable options are "email", "first_name", "last_name", "phone" (e.g "+447712345678")
         & "language" (passed as a language value i.e "en", "pl")"""
         update_user_details_url = f"{USER_RESOURCE}{self._user_id}"
-        data = await self._async_request("put", update_user_details_url, data=json.dumps(user_updates_payload))
-        return data
+        return await self._async_request("put", update_user_details_url, data=json.dumps(user_updates_payload))
 
     async def async_reset_password_request(self, user_email: str) -> str:
         """Requests reset password email with further instructions."""
