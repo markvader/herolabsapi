@@ -39,7 +39,7 @@ async def main() -> None:
     first_device_id = sonic_data["data"][0]["id"]
 
     # Get Sonic Device Information
-    device_info = await client.sonic.async_get_sonic_by_sonic_id(first_device_id)
+    device_info = await client.sonic.async_get_sonic_details(first_device_id)
     print(device_info)
     print("Valve State:", device_info["valve_state"])
 

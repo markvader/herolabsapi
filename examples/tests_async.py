@@ -62,7 +62,7 @@ async def main() -> None:
             _LOGGER.info(first_sonic_details)
             #
             # Get Sonic Device Details by Sonic ID
-            # sonic_details_by_id = await client.sonic.async_get_sonic_by_sonic_id(demo_sonic_id)
+            # sonic_details_by_id = await client.sonic.async_get_sonic_details(demo_sonic_id)
             # _LOGGER.info(sonic_details_by_id)
             #
             # Get Sonic Wi-fi Details
@@ -136,7 +136,7 @@ async def main() -> None:
             _LOGGER.info(first_signal_details)
             #
             # Get Signal Device Details by Signal ID
-            signal_details_by_id = await client.signal.async_get_signal_details_by_id(demo_signal_id)
+            signal_details_by_id = await client.signal.async_get_signal_details(demo_signal_id)
             _LOGGER.info(signal_details_by_id)
 
             # Update Signal Device Name by Signal ID

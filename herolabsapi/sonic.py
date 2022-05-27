@@ -22,7 +22,7 @@ class Sonic:
         data = await self._async_request("get", SONICS_RESOURCE)
         return data["total_entries"]
 
-    async def async_get_sonic_by_sonic_id(self, sonic_id: str) -> dict:
+    async def async_get_sonic_details(self, sonic_id: str) -> dict:
         """this sends a request to get the details of a specified sonic device"""
         sonic_id_url = f"{SONICS_RESOURCE}{sonic_id}"
         return await self._async_request("get", sonic_id_url)
