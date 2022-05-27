@@ -4,7 +4,7 @@ Written by [@markvader](https://www.github.com/markvader)
 `herolabsapi` is a Python 3, `asyncio`-friendly library for interacting with
 [Sonic by Hero Labs](https://www.hero-labs.com/).
 
-##Manufacturer Documentation
+## Manufacturer Documentation
 [Hero Labs API Documentation](https://docs.hero-labs.com/)
 
 [Hero Labs API Swagger UI](https://iot-core.hero-labs.com/ape/v1/swaggerui/)
