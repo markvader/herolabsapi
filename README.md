@@ -4,7 +4,7 @@ Written by [@markvader](https://www.github.com/markvader)
 `herolabsapi` is a Python 3, `asyncio`-friendly library for interacting with
 [Sonic by Hero Labs](https://www.hero-labs.com/).
 
-##Documentation
+##Manufacturer Documentation
 [Hero Labs API Documentation](https://docs.hero-labs.com/)
 
 [Hero Labs API Swagger UI](https://iot-core.hero-labs.com/ape/v1/swaggerui/)
@@ -16,7 +16,7 @@ pip install herolabsapi
 ```
 
 
-# Usage
+# Usage & Examples
 
 ```python
 import asyncio
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     loop.run_until_complete(main())
 ```
 
-By default, the library creates a new connection to Flo with each coroutine. If you are
+By default, the library creates a new connection to Sonic Device with each coroutine. If you are
 calling a large number of coroutines (or merely want to squeeze out every second of
 runtime savings possible), an
 [`aiohttp`](https://github.com/aio-libs/aiohttp) `ClientSession` can be used for connection
@@ -120,28 +120,12 @@ async def main() -> None:
     async with ClientSession() as session:
         client = await Client.async_login("<EMAIL>", "<PASSWORD>", session=session)
     
-        
         # USER API CALLS
         # Get User Account Information:
         user_info = await client.user.async_get_user_details()
-    
-        # Get Sonic Device Information
-        first_device_id = client.sonic.async_get_sonic_details["data"][0]["id"]
-        device_info = await client.sonic.async_get_sonic_by_sonic_id(first_device_id)
-        device_telemetry = await client.sonic.async_sonic_telemetry_by_id(first_device_id)
-    
-        # Update Sonic Device Name
-        update_sonic_details_by_id = await client.sonic.async_update_sonic_name(first_device_id, "Demo Sonic Name")
-        
-        # Close the shutoff valve
-        close_valve_response = await client.sonic.async_sonic_valve_control_by_id(first_device_id, "close")
-                
-        # Open the shutoff valve
-        open_valve_response = await client.sonic.async_sonic_valve_control_by_id(first_device_id, "open")
-        
-        # There are additional api endpoints that can be explored and called, example code can be found in the example folder
 
-asyncio.run(main())
+        #additional example code same as above
+
 ```
 
 
