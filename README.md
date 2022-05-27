@@ -36,7 +36,7 @@ async def main() -> None:
 
     # SONIC DEVICE API CALLS
     # Get Sonic Devices Information
-    sonic_data = await client.sonic.async_get_sonic_details()
+    sonic_data = await client.sonic.async_get_all_sonic_details()
     first_device_id = sonic_data["data"][0]["id"]
 
     # Get Sonic Device Information

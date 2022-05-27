@@ -1,26 +1,26 @@
 # herolabsapi - TO DO list
 
-Tests
-Example Code (separate some from readme, getting too long)
-Tidy up readme and other documentation
+## Main task remaining
+- Tests
+- Example Code (separate some from readme, getting too long)
+- Tidy up readme and other documentation
 
-functions for remaining endpoints
-    sonics_wifi endpoints currently returning zero results (but valid return)
-    - get /ape/v1/sonics_wifi
-    - get /ape/v1/sonics_wifi/{id}
-    - put /ape/v1/sonics_wifi/{id}
+## functions for remaining endpoints
+sonics_wifi endpoints currently returning zero results (but valid return)
+- get /ape/v1/sonics_wifi
+- get /ape/v1/sonics_wifi/{id}
+- put /ape/v1/sonics_wifi/{id}
 
-    no documentation on what fields can be updated via API
-    - put /ape/v1/properties/{property_id}/notifications
-    - put /ape/v1/properties/{property_id}/settings
+no documentation on what fields can be updated via API
+- put /ape/v1/properties/{property_id}/notifications
+- put /ape/v1/properties/{property_id}/settings
 
-
-later:
+## later:
 When api_token expiry date added to api by hero labs developers, incorporate its use into library
 
 
-DONE
-Check commits for all full progress, lots more than just these
+## DONE
+Check commit log for full progress, lots more than just these
 - create and use function for common headers
 - set token expiry
 - initiate checks for token being present, check if token valid, if not request one, if expiring soon, renew it.

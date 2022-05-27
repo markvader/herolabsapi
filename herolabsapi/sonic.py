@@ -13,7 +13,7 @@ class Sonic:
         """Initialize."""
         self._async_request: Callable[..., Awaitable] = async_request
 
-    async def async_get_sonic_details(self) -> dict:
+    async def async_get_all_sonic_details(self) -> dict:
         """Return the list of sonic devices."""
         return await self._async_request("get", SONICS_RESOURCE)
 
