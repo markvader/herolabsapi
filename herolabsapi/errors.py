@@ -11,7 +11,19 @@ class HeroLabsError(Exception):
 
 
 class InvalidCredentialsError(HeroLabsError):
-    """Define an error related to invalid credentials."""
+    """Define an error related to invalid credentials (Error 401 - Unauthorized)."""
+
+    pass
+
+
+class ServiceUnavailableError(HeroLabsError):
+    """Define an error related to the service being unavailable (Error 503 - Service Unavailable)."""
+
+    pass
+
+
+class TooManyRequestsError(HeroLabsError):
+    """Define an error related to too many requests (Error 429 - Too Many Requests)."""
 
     pass
 
