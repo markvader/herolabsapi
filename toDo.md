@@ -2,8 +2,6 @@
 
 ## Main task remaining
 - Tests
-- Example Code (separate some from readme, getting too long)
-- Tidy up readme and other documentation
 
 ## functions for remaining endpoints
 sonics_wifi endpoints currently returning zero results (but valid return)
@@ -35,3 +33,5 @@ Check commit log for full progress, lots more than just these
 - appropriate handling for users with multiple sonics, signals or properties, at the minute only first devices returned are utilised
 - Refactor code (reduce duplication of lines calling request library)
 - Separate functions to different files if appropriate, authentication & user functions, device interactions (sonics & signals), incidents
+- Example Code (separate some from readme, getting too long)
+- Tidy up readme and other documentation
