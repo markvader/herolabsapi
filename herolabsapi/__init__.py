@@ -1,5 +1,12 @@
 """Asynchronous Python client for the Hero Labs API."""
-from herolabsapi.errors import InvalidCredentialsError, raise_client_error, HeroLabsError
+from herolabsapi.errors import (
+    HeroLabsError,
+    InvalidCredentialsError,
+    ServiceUnavailableError,
+    TooManyRequestsError,
+    InvalidScopeError,
+    RequestError,
+    raise_client_error,)
 from herolabsapi.const import (
     BASE_RESOURCE,
     AUTH_RESOURCE,
