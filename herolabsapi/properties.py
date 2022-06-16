@@ -21,7 +21,7 @@ class Properties:
         data = await self._async_request("get", PROPERTIES_RESOURCE)
         return data["total_entries"]
 
-    async def async_get_property_details(self) -> dict:
+    async def async_get_all_property_details(self) -> dict:
         """Return the list of properties."""
         return await self._async_request("get", PROPERTIES_RESOURCE)
 
