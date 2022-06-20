@@ -54,3 +54,30 @@ class Properties:
         uprn (string) - Property uprn"""
         property_id_url = f"{PROPERTIES_RESOURCE}{property_id}"
         return await self._async_request("put", property_id_url, **kwargs)
+
+    async def async_update_property_notifications(self, property_id: str, **kwargs) -> None:
+        """The key/values pairs that can be updated are:
+        high_volume_threshold_litres (int) - valve of int must be one of:
+        [25, 50, 75, 100, 150, 200, 250, 300, 400, 500, 600, 800, 1000]
+        long_flow_notification_delay_mins (int) - valve of int must be one of:
+        [15, 30, 60, 120, 180, 240, 300, 360]
+        cloud_disconnection (bool)
+        device_handle_moved (bool),
+        health_check_failed (bool)
+        low_battery_level (bool)
+        pressure_test_failed (bool)
+        pressure_test_skipped (bool)
+        radio_disconnection (bool)"""
+        property_id_url = f"{PROPERTIES_RESOURCE}{property_id}/notifications"
+        return await self._async_request("put", property_id_url, **kwargs)
+
+    async def async_update_property_settings(self, property_id: str, **kwargs) -> None:
+        """The key/values pairs that can be updated are:
+        auto_shut_off (bool) - Automatic shut off
+        pressure_tests_enabled (bool) - Enable or disable the pressure test
+        pressure_tests_schedule (string) - Time in a day when the pressure test runs. The format is HH:MM:SS in 24h clock.
+        timezone (string) - Property timezone e.g."Europe/London"
+        webhook_enabled (bool)
+        webhook_url (string)"""
+        property_id_url = f"{PROPERTIES_RESOURCE}{property_id}/settings"
+        return await self._async_request("put", property_id_url, **kwargs)

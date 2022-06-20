@@ -80,6 +80,35 @@ async def main() -> None:
         property_open_incidents = await client.incidents.async_get_open_incidents_by_property(demo_property_id)
         print("open incidents for a property:", property_open_incidents)
 
+        # Get Property Information
+        all_property_info = await client.property.async_get_all_property_details()
+        print(all_property_info)
+
+        # Get Property Information
+        property_info = await client.property.async_get_property_details(demo_property_id)
+        print(property_info)
+
+        # Get Property Setting
+        property_settings = await client.property.async_get_property_settings(demo_property_id)
+        print(property_settings)
+
+        # Get Property notification settings
+        property_notification_settings = await client.property.async_get_property_notification_settings(demo_property_id)
+        print(property_notification_settings)
+
+        # Update Property notification settings
+        # await client.property.async_update_property_notifications(demo_property_id,
+        #                                                           json={'high_volume_threshold_litres': 75,
+        #                                                                 'long_flow_notification_delay_mins': 120,
+        #                                                                 'health_check_failed': True}
+        #                                                           )
+
+        # Update Property settings
+        await client.property.async_update_property_settings(demo_property_id,
+                                                             json={'auto_shut_off': True,
+                                                                   'pressure_tests_enabled': True}
+                                                             )
+
         # Action an Incident
         # close_incident = await client.incidents.async_close_incident(demo_incident_id)
         # print(close_incident)
