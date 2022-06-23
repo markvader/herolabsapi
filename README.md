@@ -19,6 +19,8 @@ pip install herolabsapi
 
 # Usage & Examples
 
+See examples/example.py for full example code
+
 ```python
 import asyncio
 from datetime import datetime
@@ -95,7 +97,7 @@ async def main() -> None:
     # reopen_incident = await client.incidents.async_close_incident(demo_incident_id)
 
     # There are additional api endpoints that can be explored and called (properties, signals, user),
-    # I will put example code in the examples folder.
+    # example code is in the examples folder.
     
 
 if __name__ == "__main__":
@@ -126,7 +128,7 @@ async def main() -> None:
         # Get User Account Information:
         user_info = await client.user.async_get_user_details()
 
-        #additional example code same as above
+        #additional example code same as above and example folder
 
 ```
 

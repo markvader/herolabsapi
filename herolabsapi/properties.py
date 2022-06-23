@@ -1,7 +1,8 @@
 """"Define an API endpoint manager for Properties data & actions."""
 from __future__ import annotations
 
-from typing import Awaitable, Callable, Optional
+import json
+from typing import Awaitable, Callable
 
 from herolabsapi import PROPERTIES_RESOURCE
 
@@ -41,7 +42,7 @@ class Properties:
         property_id_url = f"{PROPERTIES_RESOURCE}{property_id}/settings"
         return await self._async_request("get", property_id_url)
 
-    async def async_update_property_details(self, property_id: str, **kwargs) -> None:
+    async def async_update_property_details(self, property_id: str, property_updates_payload: dict) -> None:
         """The key/values pairs that can be updated are:
         active	(boolean) - Whether the property is active or not
         address (string) - Property address
@@ -53,9 +54,10 @@ class Properties:
         postcode (string) - Property postcode
         uprn (string) - Property uprn"""
         property_id_url = f"{PROPERTIES_RESOURCE}{property_id}"
-        return await self._async_request("put", property_id_url, **kwargs)
+        return await self._async_request("put", property_id_url, data=json.dumps(property_updates_payload))
 
-    async def async_update_property_notifications(self, property_id: str, **kwargs) -> None:
+    async def async_update_property_notifications(self, property_id: str,
+                                                  property_notification_updates_payload: dict) -> None:
         """The key/values pairs that can be updated are:
         high_volume_threshold_litres (int) - valve of int must be one of:
         [25, 50, 75, 100, 150, 200, 250, 300, 400, 500, 600, 800, 1000]
@@ -69,9 +71,9 @@ class Properties:
         pressure_test_skipped (bool)
         radio_disconnection (bool)"""
         property_id_url = f"{PROPERTIES_RESOURCE}{property_id}/notifications"
-        return await self._async_request("put", property_id_url, **kwargs)
+        return await self._async_request("put", property_id_url, data=json.dumps(property_notification_updates_payload))
 
-    async def async_update_property_settings(self, property_id: str, **kwargs) -> None:
+    async def async_update_property_settings(self, property_id: str, property_settings_updates_payload: dict) -> None:
         """The key/values pairs that can be updated are:
         auto_shut_off (bool) - Automatic shut off
         pressure_tests_enabled (bool) - Enable or disable the pressure test
@@ -80,4 +82,4 @@ class Properties:
         webhook_enabled (bool)
         webhook_url (string)"""
         property_id_url = f"{PROPERTIES_RESOURCE}{property_id}/settings"
-        return await self._async_request("put", property_id_url, **kwargs)
+        return await self._async_request("put", property_id_url, data=json.dumps(property_settings_updates_payload))

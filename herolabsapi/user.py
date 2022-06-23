@@ -20,7 +20,7 @@ class User:
         user_details_url = f"{USER_RESOURCE}{self._user_id}"
         return await self._async_request("get", user_details_url)
 
-    async def async_update_user_details(self, user_updates_payload: str) -> None:
+    async def async_update_user_details(self, user_updates_payload: dict) -> None:
         """Update the user details.
         For multiple changes use comma separation dictionary {'last_name': 'testLastName', 'language': 'en'}
         These are passed as arguments in the function.

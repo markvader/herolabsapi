@@ -22,8 +22,7 @@ class Incidents:
         """Return the list of Open Incidents."""
         all_incidents = await self._async_request("get", INCIDENTS_RESOURCE)
         open_incidents = [v for v in all_incidents['data'] if v['open'] is True]
-        open_incident_count = len([ele for ele in open_incidents if isinstance(ele, dict)])
-        return open_incidents, open_incident_count
+        return open_incidents
 
     async def async_get_incident_details(self, incident_id) -> dict:
         """Return the details on specified incident. (leakage detection, disconnection, low battery etc.)"""
@@ -42,8 +41,7 @@ class Incidents:
         incident_id_url = f"{PROPERTIES_RESOURCE}{property_id}/incidents"
         all_incidents = await self._async_request("get", incident_id_url)
         open_incidents = [v for v in all_incidents['data'] if v['open'] is True]
-        open_incident_count = len([ele for ele in open_incidents if isinstance(ele, dict)])
-        return open_incidents, open_incident_count
+        return open_incidents
 
     async def async_close_incident(self, incident_id: str) -> str:
         """Close an incident"""

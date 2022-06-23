@@ -21,7 +21,7 @@ class Signals:
         data = await self._async_request("get", SIGNALS_RESOURCE)
         return data["total_entries"]
 
-    async def async_get_signal_details(self) -> dict:
+    async def async_get_all_signal_details(self) -> dict:
         """Return the list of Signal devices."""
         return await self._async_request("get", SIGNALS_RESOURCE)
 
