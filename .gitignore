@@ -2,3 +2,6 @@
 
 # Ignored files
 config.ini
+example_commented.py
+naming.py
+pressure.py
