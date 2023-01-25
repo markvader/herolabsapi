@@ -1,7 +1,7 @@
 Metadata-Version: 2.1
 Name: herolabsapi
-Version: 0.3.3
-Summary: Python Library for Hero Labs API, creators of the Sonic smart water shut off valve
+Version: 0.4.0
+Summary: Python Library for Hero Labs API (creators of the Sonic smart water shut off valve)
 Home-page: https://github.com/markvader/herolabsapi
 Author: Mark Breen
 Author-email: markjbreen@gmail.com
@@ -29,6 +29,8 @@ pip install herolabsapi
 
 
 # Usage & Examples
+
+See examples/example.py for full example code
 
 ```python
 import asyncio
@@ -106,7 +108,7 @@ async def main() -> None:
     # reopen_incident = await client.incidents.async_close_incident(demo_incident_id)
 
     # There are additional api endpoints that can be explored and called (properties, signals, user),
-    # I will put example code in the examples folder.
+    # example code is in the examples folder.
     
 
 if __name__ == "__main__":
@@ -137,7 +139,7 @@ async def main() -> None:
         # Get User Account Information:
         user_info = await client.user.async_get_user_details()
 
-        #additional example code same as above
+        #additional example code same as above and example folder
 
 ```
 
