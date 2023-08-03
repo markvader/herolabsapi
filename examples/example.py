@@ -173,7 +173,9 @@ async def main() -> None:
         # cloud_disconnection (bool)
         # device_handle_moved (bool),
         # health_check_failed (bool)
-        # low_battery_level (bool)
+        # legionella_risk(bool)
+        # low_battery_level(bool)
+        # low_water_temperature(bool)
         # pressure_test_failed (bool)
         # pressure_test_skipped (bool)
         # radio_disconnection (bool)
