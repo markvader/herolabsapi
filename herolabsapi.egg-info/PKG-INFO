@@ -1,7 +1,7 @@
 Metadata-Version: 2.1
 Name: herolabsapi
-Version: 0.4.0
-Summary: Python Library for Hero Labs API (creators of the Sonic smart water shut off valve)
+Version: 0.4.1
+Summary: Python Library for Hero Labs API (Sonic smart water shut off valve)
 Home-page: https://github.com/markvader/herolabsapi
 Author: Mark Breen
 Author-email: markjbreen@gmail.com
