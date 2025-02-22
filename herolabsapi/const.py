@@ -1,7 +1,7 @@
 """Define package constants."""
 # Hero Labs API endpoints
 # key api resource endpoints
-BASE_RESOURCE: str = "https://api.hero-labs.com/"
+BASE_RESOURCE: str = "https://api.watergate.ai/"
 AUTH_RESOURCE: str = "user-service/auth/sign_in"
 USER_RESOURCE: str = "user-service/customer_app/users/"  # +USER_ID
 REFRESH_TOKEN_RESOURCE: str = "user-service/auth/refresh_token"
