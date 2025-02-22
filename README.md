@@ -2,12 +2,12 @@
 Written by [@markvader](https://www.github.com/markvader)
 
 `herolabsapi` is a Python 3, `asyncio`-friendly library for interacting with
-[Sonic by Hero Labs](https://www.hero-labs.com/).
+[Sonic by Hero Labs](https://www.watergate.ai/).
 
 ## Manufacturer Documentation
-[Hero Labs API Documentation](https://docs.hero-labs.com/)
+[Hero Labs API Documentation](https://docs.watergate.ai/)
 
-[Hero Labs API Swagger UI](https://iot-core.hero-labs.com/ape/v1/swaggerui/)
+[Hero Labs API Swagger UI](https://iot-core.watergate.ai/ape/v1/swaggerui/)
 
 A list of gathered API endpoints and their functions can be found [here](https://github.com/markvader/herolabsapi/blob/master/api_endpoints.md)
 # Installation
